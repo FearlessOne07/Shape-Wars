@@ -6,7 +6,11 @@
 
 void Game::Init(int width, int height, const char *title, int fps) {
   SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+  SetConfigFlags(FLAG_MSAA_4X_HINT);
   InitWindow(1280, 720, title);
+  SetExitKey(0);
+  SetWindowMinSize(1280, 720);
+
   if (fps > 0) {
     SetTargetFPS(fps);
   }
@@ -36,6 +40,7 @@ void Game::Run() {
     int marginY = (windowHeight - (_gameHeight * scale)) / 2;
 
     float dt = GetFrameTime();
+
     _scenemanager.Update(dt);
 
     BeginTextureMode(_renderTexture);
@@ -44,7 +49,7 @@ void Game::Run() {
 
     BeginDrawing();
     ClearBackground(BLACK);
-    DrawTexturePro(_renderTexture.texture, {0, 0, _gameWidth, _gameHeight},
+    DrawTexturePro(_renderTexture.texture, {0, 0, _gameWidth, -_gameHeight},
                    {(float)marginX, (float)marginY, _gameWidth * scale,
                     _gameHeight * scale},
                    {0, 0}, 0.f, WHITE);

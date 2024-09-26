@@ -5,6 +5,7 @@ target_sources(main    # No quotes around "main"
   "./Core/Game/Game.cpp"
   "./Core/SceneManager/SceneManager.cpp"
   "./Scenes/GameScene/GameScene.cpp"
+  "./Player/Player.cpp"
 )
 
 target_include_directories(main
