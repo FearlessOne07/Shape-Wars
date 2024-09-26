@@ -1,5 +1,8 @@
 #include "SceneManager.hpp"
+#include "Core/SceneManager/SceneTransition.hpp"
+#include <iostream>
 #include <utility>
+
 void SceneManager::PushScene(std::unique_ptr<Scene> scene) {
   if (!_scenes.empty()) {
     _scenes.top()->Exit();
@@ -35,8 +38,19 @@ void SceneManager::SetQuitCallBack(QuitCallBack quitCallBack) {
 void SceneManager::Update(float dt) {
   if (!_scenes.empty()) {
     _scenes.top()->Update(dt);
+
+    SceneTransition sceneTrans = _scenes.top()->GetSceneTransition();
+    if (sceneTrans.request != SceneRequest::NONE) {
+      if (sceneTrans.request == SceneRequest::QUIT) {
+        std::cout << "Quiting!\n";
+        _quitCallBack();
+      }
+
+      _scenes.top()->ResetSceneTransition();
+    }
   }
 }
+
 void SceneManager::Render() {
   if (!_scenes.empty()) {
     _scenes.top()->Render();

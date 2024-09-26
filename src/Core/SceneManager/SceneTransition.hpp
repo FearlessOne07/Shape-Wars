@@ -1,7 +1,7 @@
 #pragma once
-enum SceneID { NONE = 0, GAME_MENU };
-enum SceneRequest {
-  NULL = 0,
+enum class SceneID { NONE = 0, GAME_MENU };
+enum class SceneRequest {
+  NONE = 0,
   QUIT,
   PUSH_NEW_SCENE,
   POP_CURRENT_SCENE,
@@ -9,6 +9,6 @@ enum SceneRequest {
 };
 
 struct SceneTransition {
-  SceneRequest requrest;
+  SceneRequest request;
   SceneID sceneID;
 };
