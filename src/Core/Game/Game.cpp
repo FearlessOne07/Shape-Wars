@@ -57,6 +57,5 @@ void Game::Run() {
   }
   End();
 }
-
 void Game::End() { CloseWindow(); }
 void Game::QuitCallBack() { _running = false; }

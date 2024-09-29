@@ -1,10 +1,12 @@
 #pragma once
 #include "SceneTransition.hpp"
+#include "raylib.h"
 
 class Scene {
 protected:
   virtual void GetInput() = 0;
   SceneTransition _sceneTransition;
+  Color _fillColor;
 
 public:
   virtual ~Scene() {}

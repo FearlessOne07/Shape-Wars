@@ -1,15 +1,22 @@
 #include "Player.hpp"
-#include "Core/EntityManager/Entity.hpp"
+#include "EntityManager/Entity.hpp"
 #include "raylib.h"
 #include "raymath.h"
 
 Player::Player(Color color, float speed, float acceleration, Vector2 position)
-    : Entity(color, speed, acceleration, position) {}
+    : Entity(color, speed, acceleration, position) {
+  _canShoot = true;
+  _fireRate = 0.3;
+  ;
+}
+
 void Player::Update(float dt) {
   GetInput();
   UpdateMovement(dt);
 }
+
 void Player::Render() { DrawPolyLinesEx(_position, 8, _radius, 0, 4, _color); }
+
 void Player::GetInput() {
 
   if (IsKeyDown(KEY_A)) {
@@ -27,6 +34,10 @@ void Player::GetInput() {
   } else {
     _targetVelocity.y = 0;
   }
+
+  if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+    Shoot();
+  }
 }
 
 void Player::UpdateMovement(float dt) {
@@ -37,3 +48,5 @@ void Player::UpdateMovement(float dt) {
   _velocity = Vector2Lerp(_velocity, _targetVelocity, _acceleration * dt);
   _position = Vector2Add(_position, Vector2Scale(_velocity, _speed * dt));
 }
+
+bool Player::IsColliding(Entity &other) { return 0; }

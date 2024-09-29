@@ -6,6 +6,8 @@ target_sources(main    # No quotes around "main"
   "./Core/SceneManager/SceneManager.cpp"
   "./Scenes/GameScene/GameScene.cpp"
   "./Player/Player.cpp"
+  "./BulletManager/BulletManager.cpp"
+  "./EntityManager/EntityManager.cpp"
 )
 
 target_include_directories(main
