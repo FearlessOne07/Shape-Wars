@@ -43,6 +43,6 @@ SceneTransition GameScene::GetSceneTransition() { return _sceneTransition; }
 
 void GameScene::SpawnPlayer() {
   std::unique_ptr<Entity> player =
-      std::make_unique<Player>(BLUE, 1000.f, 3, Vector2{100, 100});
+      std::make_unique<Player>(BLUE, 500.f, 3, Vector2{100, 100});
   _entityManager.AddEntity(player);
 }

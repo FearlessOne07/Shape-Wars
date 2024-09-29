@@ -1,4 +1,5 @@
 #include "Player.hpp"
+#include "BulletManager/PlayerBullet/PlayerBullet.hpp"
 #include "EntityManager/Entity.hpp"
 #include "raylib.h"
 #include "raymath.h"
@@ -7,7 +8,6 @@ Player::Player(Color color, float speed, float acceleration, Vector2 position)
     : Entity(color, speed, acceleration, position) {
   _canShoot = true;
   _fireRate = 0.3;
-  ;
 }
 
 void Player::Update(float dt) {
@@ -35,7 +35,7 @@ void Player::GetInput() {
     _targetVelocity.y = 0;
   }
 
-  if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
     Shoot();
   }
 }
@@ -50,3 +50,9 @@ void Player::UpdateMovement(float dt) {
 }
 
 bool Player::IsColliding(Entity &other) { return 0; }
+
+void Player::Shoot() {
+  std::unique_ptr<Bullet> bullet =
+      std::make_unique<PlayerBullet>(_position, 1000.f, GetMousePosition());
+  _bulletSpawnCallback(bullet);
+}

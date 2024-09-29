@@ -10,8 +10,10 @@ PlayerBullet::PlayerBullet(Vector2 position, float speed, Vector2 target)
 
 void PlayerBullet::Update(float dt) { UpdateMovment(dt); }
 
-void PlayerBullet::Render() { DrawCircleLinesV(_position, _radius, RAYWHITE); }
+void PlayerBullet::Render() {
+  DrawPolyLinesEx(_position, 6, _radius, 0, 3, RAYWHITE);
+}
 
 void PlayerBullet::UpdateMovment(float dt) {
-  _position = Vector2Add(_velocity, _position);
+  _position = Vector2Add(Vector2Scale(_velocity, _speed * dt), _position);
 }
