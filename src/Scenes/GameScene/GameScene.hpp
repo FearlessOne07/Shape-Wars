@@ -1,14 +1,16 @@
-#include "Core/EntityManager/Entity.hpp"
+#include "BulletManager/BulletManager.hpp"
 #include "Core/SceneManager/Scene.hpp"
 #include "Core/SceneManager/SceneTransition.hpp"
-#include <memory>
+#include "EntityManager/EntityManager.hpp"
 
 class GameScene : public Scene {
 private:
-  std::unique_ptr<Entity> _player;
+  EntityManager _entityManager;
+  BulletManager _bulletManager;
 
 private:
   void GetInput() override;
+  void SpawnPlayer();
 
 private:
 public:
