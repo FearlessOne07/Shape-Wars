@@ -10,7 +10,7 @@ protected:
 
 public:
   Bullet(Vector2 position, float speed)
-      : _position(position), _speed(speed), _velocity({0}), _radius(30) {}
+      : _position(position), _speed(speed), _velocity({0}), _radius(10) {}
 
   virtual ~Bullet() {}
   virtual void Update(float dt) = 0;

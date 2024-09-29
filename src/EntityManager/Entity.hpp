@@ -17,6 +17,7 @@ protected: // Attributes
   // Shooting
   bool _canShoot;
   float _fireRate;
+  float _fireTimer;
   std::function<void(std::unique_ptr<Bullet> &)> _bulletSpawnCallback;
 
   // State
