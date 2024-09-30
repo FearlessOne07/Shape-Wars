@@ -30,7 +30,7 @@ public:
         _acceleration(acceleration), _position(position), _targetVelocity({0}),
         _radius(30), _isAlve(true) {}
   virtual ~Entity() {}
-  virtual void Update(float dt) = 0;
+  virtual void Update(float dt, const RenderContext &rendercontext) = 0;
   virtual void Render() = 0;
   virtual bool IsColliding(Entity &other) = 0;
   void SetBulletSpawnCallback(

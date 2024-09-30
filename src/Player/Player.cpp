@@ -1,5 +1,6 @@
 #include "Player.hpp"
 #include "BulletManager/PlayerBullet/PlayerBullet.hpp"
+#include "Core/Game/RenderContext.hpp"
 #include "EntityManager/Entity.hpp"
 #include "raylib.h"
 #include "raymath.h"
@@ -10,15 +11,14 @@ Player::Player(Color color, float speed, float acceleration, Vector2 position)
   _fireRate = 0.3;
 }
 
-void Player::Update(float dt) {
-  GetInput();
+void Player::Update(float dt, const RenderContext &rendercontext) {
+  GetInput(rendercontext);
   UpdateMovement(dt);
 }
 
 void Player::Render() { DrawPolyLinesEx(_position, 8, _radius, 0, 4, _color); }
 
-void Player::GetInput() {
-
+void Player::GetInput(const RenderContext &rendercontext) {
   if (IsKeyDown(KEY_A)) {
     _targetVelocity.x = -1;
   } else if (IsKeyDown(KEY_D)) {
@@ -36,7 +36,7 @@ void Player::GetInput() {
   }
 
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-    Shoot();
+    Shoot(rendercontext);
   }
 }
 
@@ -51,8 +51,16 @@ void Player::UpdateMovement(float dt) {
 
 bool Player::IsColliding(Entity &other) { return 0; }
 
-void Player::Shoot() {
+void Player::Shoot(const RenderContext &rendercontext) {
+  Vector2 mousePosition = GetMousePosition();
+
+  // Convert the mouse position using the RenderContext data
+  mousePosition.x =
+      (mousePosition.x - rendercontext.marginX) / rendercontext.scale;
+  mousePosition.y =
+      (mousePosition.y - rendercontext.marginY) / rendercontext.scale;
+
   std::unique_ptr<Bullet> bullet =
-      std::make_unique<PlayerBullet>(_position, 1000.f, GetMousePosition());
+      std::make_unique<PlayerBullet>(_position, 1000.f, mousePosition);
   _bulletSpawnCallback(bullet);
 }

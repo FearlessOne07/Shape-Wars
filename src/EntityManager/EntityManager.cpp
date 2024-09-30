@@ -1,9 +1,9 @@
 #include "EntityManager/EntityManager.hpp"
 
-void EntityManager::Update(float dt) {
+void EntityManager::Update(float dt, const RenderContext &rendercontext) {
 
   for (auto &e : _entities) {
-    e->Update(dt);
+    e->Update(dt, rendercontext);
   }
 }
 

@@ -21,21 +21,22 @@ void GameScene::GetInput() {
     _sceneTransition = {SceneRequest::QUIT, SceneID::NONE};
   }
 }
+
 void GameScene::Exit() {
   _entityManager.Reset();
   _bulletManager.Reset();
 }
 
 void GameScene::Render() {
-  ClearBackground(RED);
+  ClearBackground(BLACK);
   _entityManager.Render();
   _bulletManager.Render();
   DrawText(TextFormat("FPS: %i", GetFPS()), 30, 30, 48, WHITE);
 }
 
-void GameScene::Update(float dt) {
+void GameScene::Update(float dt, const RenderContext &rendercontext) {
   GetInput();
-  _entityManager.Update(dt);
+  _entityManager.Update(dt, rendercontext);
   _bulletManager.Update(dt);
 }
 

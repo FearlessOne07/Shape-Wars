@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "RenderContext.hpp"
 #include "Scenes/GameScene/GameScene.hpp"
 #include "raylib.h"
 #include <algorithm>
@@ -38,11 +39,12 @@ void Game::Run() {
 
     int marginX = (windowWidth - (_gameWidth * scale)) / 2;
     int marginY = (windowHeight - (_gameHeight * scale)) / 2;
+    RenderContext renderContext = {_gameWidth, _gameHeight, (float)marginX,
+                                   (float)marginY, scale};
 
     float dt = GetFrameTime();
 
-    _scenemanager.Update(dt);
-
+    _scenemanager.Update(dt, renderContext);
     BeginTextureMode(_renderTexture);
     _scenemanager.Render();
     EndTextureMode();

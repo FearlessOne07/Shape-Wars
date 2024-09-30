@@ -14,7 +14,7 @@ private:
 
 private:
 public:
-  void Update(float dt) override;
+  void Update(float dt, const RenderContext &rendercontext) override;
   void Render() override;
   void Enter() override;
   void Exit() override;
