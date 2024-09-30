@@ -1,4 +1,5 @@
 #pragma once
+#include "Core/Game/RenderContext.hpp"
 #include "Scene.hpp"
 #include <functional>
 #include <memory>
@@ -16,7 +17,7 @@ public:
   void PopScene();
   void ReplaceScene(std::unique_ptr<Scene> scene);
 
-  void Update(float dt);
+  void Update(float dt, const RenderContext &rendercontext);
   void Render();
 
   void SetQuitCallBack(QuitCallBack quitCallback);

@@ -1,11 +1,11 @@
 #pragma once
 
-#include "BulletManager/BulletManager.hpp"
+#include "Core/Game/RenderContext.hpp"
 #include "EntityManager/Entity.hpp"
-
 #include <functional>
 #include <memory>
 #include <vector>
+
 class EntityManager {
 private:
   std::vector<std::unique_ptr<Entity>> _entities;
@@ -13,7 +13,7 @@ private:
 
 public:
   void Reset();
-  void Update(float dt);
+  void Update(float dt, const RenderContext &rendercontext);
   void Render();
   void SetBulletSpawnCallBack(
       std::function<void(std::unique_ptr<Bullet> &)> bulletSpawnCallback);

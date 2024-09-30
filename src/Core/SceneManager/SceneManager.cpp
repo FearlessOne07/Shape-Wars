@@ -35,9 +35,9 @@ void SceneManager::SetQuitCallBack(QuitCallBack quitCallBack) {
   _quitCallBack = quitCallBack;
 }
 
-void SceneManager::Update(float dt) {
+void SceneManager::Update(float dt, const RenderContext &rendercontext) {
   if (!_scenes.empty()) {
-    _scenes.top()->Update(dt);
+    _scenes.top()->Update(dt, rendercontext);
 
     SceneTransition sceneTrans = _scenes.top()->GetSceneTransition();
     if (sceneTrans.request != SceneRequest::NONE) {
