@@ -30,6 +30,7 @@ void Game::Init(int width, int height, const char *title, int fps) {
 void Game::Run() {
 
   while (!WindowShouldClose() && _running) {
+    GetInput();
 
     int windowWidth = GetScreenWidth();
     int windowHeight = GetScreenHeight();
@@ -50,7 +51,7 @@ void Game::Run() {
     EndTextureMode();
 
     BeginDrawing();
-    ClearBackground(BLACK);
+    ClearBackground({33, 34, 39, 255});
     DrawTexturePro(_renderTexture.texture, {0, 0, _gameWidth, -_gameHeight},
                    {(float)marginX, (float)marginY, _gameWidth * scale,
                     _gameHeight * scale},
@@ -58,6 +59,11 @@ void Game::Run() {
     EndDrawing();
   }
   End();
+}
+void Game::GetInput() {
+  if (IsKeyPressed(KEY_F11)) {
+    ToggleFullscreen();
+  }
 }
 void Game::End() { CloseWindow(); }
 void Game::QuitCallBack() { _running = false; }

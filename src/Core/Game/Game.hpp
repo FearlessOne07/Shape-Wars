@@ -12,6 +12,9 @@ private:
 private: // Systems
   SceneManager _scenemanager;
 
+private: // Methods
+  void GetInput();
+
 public:
   Game() = default;
   void Init(int width, int height, const char *title, int fps = 0);

@@ -11,6 +11,7 @@ private:
 private:
   void GetInput() override;
   void SpawnPlayer();
+  void SpawnWave();
 
 private:
 public:
