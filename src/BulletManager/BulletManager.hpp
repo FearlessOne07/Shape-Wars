@@ -6,10 +6,15 @@ class BulletManager {
 private:
   std::vector<std::unique_ptr<Bullet>> _bullets;
 
+  void RemoveDeadBullets();
+
 public:
-  BulletManager() = default;
+  // Core
+  void Init();
   void Reset();
-  void Update(float dt);
+  void Update(float dt, const RenderContext &renderContext);
   void Render();
+
+  // Bullets
   void SpawnBullet(std::unique_ptr<Bullet> &bullet);
 };

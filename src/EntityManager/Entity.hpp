@@ -1,16 +1,17 @@
 #pragma once
+#include "Core/Game/RenderContext.hpp"
+#include "raylib.h"
 #include <functional>
 #include <memory>
-
-#include "raylib.h"
 class Bullet;
+class Player;
 class Entity {
 protected: // Attributes
   Color _color;
   float _radius;
   Vector2 _velocity;
   float _speed;
-  float _acceleration;
+  int _acceleration;
   Vector2 _targetVelocity;
   Vector2 _position;
 
@@ -23,20 +24,27 @@ protected: // Attributes
   // State
   bool _isAlve;
 
+  std::function<const Player *()> _getPlayerCallBack;
+
 protected: // Methods
+  virtual void UpdateMovement(float dt) = 0;
+
 public:
-  Entity(Color color, float speed, float acceleration, Vector2 position)
+  Entity(Color color, float speed, int acceleration, Vector2 position)
       : _color(color), _velocity({0}), _speed(speed),
         _acceleration(acceleration), _position(position), _targetVelocity({0}),
-        _radius(30), _isAlve(true) {}
+        _fireTimer(0), _radius(30), _isAlve(true) {}
   virtual ~Entity() {}
   virtual void Update(float dt, const RenderContext &rendercontext) = 0;
   virtual void Render() = 0;
-  virtual bool IsColliding(Entity &other) = 0;
+  virtual bool IsColliding(const Entity &other) = 0;
   void SetBulletSpawnCallback(
       std::function<void(std::unique_ptr<Bullet> &)> bulletCallBack) {
     _bulletSpawnCallback = bulletCallBack;
   }
-
+  void SetGetPlayerCallBack(std::function<const Player *()> getPlayerCallBack) {
+    _getPlayerCallBack = getPlayerCallBack;
+  }
+  Vector2 GetPosition() const { return _position; }
   bool CanShoot() const { return _canShoot; }
 };

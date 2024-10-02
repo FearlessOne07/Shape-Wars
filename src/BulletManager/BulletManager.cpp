@@ -1,11 +1,14 @@
 #include "BulletManager.hpp"
 #include "Bullet.hpp"
+#include <algorithm>
 #include <utility>
 
-void BulletManager::Update(float dt) {
+void BulletManager::Init() { _bullets.reserve(50); }
+void BulletManager::Update(float dt, const RenderContext &renderContext) {
   for (auto &b : _bullets) {
-    b->Update(dt);
+    b->Update(dt, renderContext);
   }
+  RemoveDeadBullets();
 }
 
 void BulletManager::Render() {
@@ -15,6 +18,14 @@ void BulletManager::Render() {
 }
 
 void BulletManager::SpawnBullet(std::unique_ptr<Bullet> &bullet) {
-  _bullets.push_back(std::unique_ptr<Bullet>(std::move(bullet)));
+  _bullets.emplace_back(std::move(bullet));
 }
+
+void BulletManager::RemoveDeadBullets() {
+  auto it =
+      std::remove_if(_bullets.begin(), _bullets.end(),
+                     [](std::unique_ptr<Bullet> &b) { return !b->IsAlive(); });
+  _bullets.erase(it, _bullets.end());
+}
+
 void BulletManager::Reset() { _bullets.clear(); }

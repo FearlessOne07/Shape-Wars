@@ -8,7 +8,10 @@ PlayerBullet::PlayerBullet(Vector2 position, float speed, Vector2 target)
   _velocity = Vector2Normalize(_velocity);
 }
 
-void PlayerBullet::Update(float dt) { UpdateMovment(dt); }
+void PlayerBullet::Update(float dt, const RenderContext &renderContext) {
+  UpdateMovment(dt);
+  CheckActivity(renderContext);
+}
 
 void PlayerBullet::Render() {
   DrawPolyLinesEx(_position, 6, _radius, 0, 3, RAYWHITE);
@@ -16,4 +19,19 @@ void PlayerBullet::Render() {
 
 void PlayerBullet::UpdateMovment(float dt) {
   _position = Vector2Add(Vector2Scale(_velocity, _speed * dt), _position);
+}
+
+void PlayerBullet::CheckActivity(const RenderContext &renderContext) {
+  float minWidth = (0 - renderContext.marginX) / renderContext.scale;
+  float maxWidth =
+      (GetScreenWidth() - renderContext.marginX) / renderContext.scale;
+
+  float minHeight = (0 - renderContext.marginX) / renderContext.scale;
+  float maxHeight =
+      (GetScreenHeight() - renderContext.marginY) / renderContext.scale;
+
+  if (_position.x < minWidth || _position.x > maxWidth ||
+      _position.y < minHeight || _position.y > maxHeight) {
+    _isAlive = false;
+  }
 }

@@ -10,12 +10,22 @@ class EntityManager {
 private:
   std::vector<std::unique_ptr<Entity>> _entities;
   std::function<void(std::unique_ptr<Bullet> &)> _bulletSpawnCallback;
+  std::unique_ptr<Entity> _player;
 
 public:
-  void Reset();
+  // Core
+  void Init();
   void Update(float dt, const RenderContext &rendercontext);
   void Render();
+  void Reset();
+
+  // Entities
+  void SpawnPlayer(Color color, float speed, int accelerationFactor,
+                   Vector2 startPos);
+  void AddEntity(std::unique_ptr<Entity> &entity);
   void SetBulletSpawnCallBack(
       std::function<void(std::unique_ptr<Bullet> &)> bulletSpawnCallback);
-  void AddEntity(std::unique_ptr<Entity> &entity);
+
+  // Access
+  const Player *GetPlayer() const;
 };

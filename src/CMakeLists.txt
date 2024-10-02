@@ -9,6 +9,7 @@ target_sources(main    # No quotes around "main"
   "./BulletManager/BulletManager.cpp"
   "./EntityManager/EntityManager.cpp"
   "./BulletManager/PlayerBullet/PlayerBullet.cpp"
+  "./Enemies/Chaser/Chaser.cpp"
 )
 
 target_include_directories(main
