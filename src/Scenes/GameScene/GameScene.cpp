@@ -2,7 +2,6 @@
 #include "BulletManager/BulletManager.hpp"
 #include "Core/SceneManager/SceneTransition.hpp"
 #include "Enemies/Chaser/Chaser.hpp"
-#include "Player/Player.hpp"
 #include "raylib.h"
 #include <memory>
 
@@ -53,7 +52,7 @@ void GameScene::SpawnPlayer() {
 }
 
 void GameScene::SpawnWave() {
-  for (float i = 0; i < 1; ++i) {
+  for (float i = 1; i <= 0; ++i) {
     std::unique_ptr<Entity> enemy =
         std::make_unique<Chaser>(RED, 200.f, 2, Vector2{i * 100, i * 200});
     _entityManager.AddEntity(enemy);

@@ -8,6 +8,7 @@ private:
   void UpdateMovement(float dt) override;
   void Shoot(const RenderContext &rendercontext);
   void UpdateTimers(float dt);
+  void Rotate(float dt) override;
 
 public:
   Player(Color color, float speed, int acceleration, Vector2 position);

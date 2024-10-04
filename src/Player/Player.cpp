@@ -10,15 +10,24 @@ Player::Player(Color color, float speed, int acceleration, Vector2 position)
   _canShoot = true;
   _fireRate = 0.3;
   _fireTimer = 0.f;
+
+  // Rotation
+  _targetRotation = 0.5f;
+  _rotation = 0.f;
+  _rotationAccelertionFactor = 0.5;
+  _rotationSpeed = 300.f;
 }
 
 void Player::Update(float dt, const RenderContext &rendercontext) {
   UpdateTimers(dt);
   GetInput(rendercontext);
   UpdateMovement(dt);
+  Rotate(dt);
 }
 
-void Player::Render() { DrawPolyLinesEx(_position, 8, _radius, 0, 4, _color); }
+void Player::Render() {
+  DrawPolyLinesEx(_position, 8, _radius, _rotation, 4, _color);
+}
 
 void Player::GetInput(const RenderContext &rendercontext) {
   if (IsKeyDown(KEY_A)) {
@@ -43,6 +52,12 @@ void Player::GetInput(const RenderContext &rendercontext) {
       _fireTimer = 0.f;
       Shoot(rendercontext);
     }
+  }
+
+  if (IsKeyDown(KEY_SPACE)) {
+    _targetRotation = 2;
+  } else {
+    _targetRotation = 0.5;
   }
 }
 
@@ -73,4 +88,16 @@ void Player::Shoot(const RenderContext &rendercontext) {
 void Player::UpdateTimers(float dt) {
   if (_fireTimer < _fireRate)
     _fireTimer += dt;
+}
+
+void Player::Rotate(float dt) {
+  if (_targetRotation >= 0) {
+    _rotationVelocity = Lerp(_rotationVelocity, _targetRotation,
+                             _rotationAccelertionFactor * dt);
+  }
+  _rotation += (_rotationVelocity * _rotationSpeed) * dt;
+
+  if (_rotation > 360) {
+    _rotation = 0;
+  }
 }
