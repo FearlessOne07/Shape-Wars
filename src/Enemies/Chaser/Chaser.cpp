@@ -9,6 +9,7 @@ Chaser::Chaser(Color color, float speed, int acceleration, Vector2 position)
 void Chaser::ChasePlayer() {
   Vector2 direction =
       Vector2Subtract(_getPlayerCallBack()->GetPosition(), _position);
+
   _targetVelocity = Vector2Normalize(direction);
 }
 
@@ -24,5 +25,7 @@ void Chaser::Update(float dt, const RenderContext &rendercontext) {
   ChasePlayer();
   UpdateMovement(dt);
 }
+
+void Chaser::Rotate(float dt) {}
 void Chaser::Render() { DrawPolyLinesEx(_position, 3, _radius, 0, 3, _color); }
 bool Chaser::IsColliding(const Entity &other) { return false; }
