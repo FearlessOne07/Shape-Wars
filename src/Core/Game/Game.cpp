@@ -40,12 +40,12 @@ void Game::Run() {
 
     int marginX = (windowWidth - (_gameWidth * scale)) / 2;
     int marginY = (windowHeight - (_gameHeight * scale)) / 2;
-    RenderContext renderContext = {_gameWidth, _gameHeight, (float)marginX,
+    RenderContext rendercontext = {_gameWidth, _gameHeight, (float)marginX,
                                    (float)marginY, scale};
 
     float dt = GetFrameTime();
 
-    _scenemanager.Update(dt, renderContext);
+    _scenemanager.Update(dt, rendercontext);
     BeginTextureMode(_renderTexture);
     _scenemanager.Render();
     EndTextureMode();

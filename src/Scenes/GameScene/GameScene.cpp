@@ -17,6 +17,10 @@ void GameScene::Enter() {
       [this](std::unique_ptr<Bullet> &bullet) {
         this->_bulletManager.SpawnBullet(bullet);
       });
+
+  _camera.zoom = 0.7;
+  _camera.offset = {0, 0};
+
   SpawnPlayer();
   SpawnWave();
 }
@@ -34,13 +38,17 @@ void GameScene::Exit() {
 
 void GameScene::Render() {
   ClearBackground(BLACK);
+  BeginMode2D(_camera);
+  DrawCircle(0, 0, 5, RED);
   _entityManager.Render();
   _bulletManager.Render();
+  EndMode2D();
   DrawText(TextFormat("FPS: %i", GetFPS()), 30, 30, 48, WHITE);
 }
 
 void GameScene::Update(float dt, const RenderContext &rendercontext) {
   GetInput();
+  UpdateCamera(dt, rendercontext);
   _entityManager.Update(dt, rendercontext);
   _bulletManager.Update(dt, rendercontext);
 }
@@ -49,6 +57,12 @@ SceneTransition GameScene::GetSceneTransition() { return _sceneTransition; }
 
 void GameScene::SpawnPlayer() {
   _entityManager.SpawnPlayer(BLUE, 500.f, 3, Vector2{100, 100});
+}
+
+void GameScene::UpdateCamera(float dt, const RenderContext &rendercontext) {
+  _camera.offset.x = rendercontext.gameWidth / 2;
+  _camera.offset.y = rendercontext.gameHeight / 2;
+  rendercontext.camera = _camera;
 }
 
 void GameScene::SpawnWave() {

@@ -2,6 +2,7 @@
 
 #include "Core/Game/RenderContext.hpp"
 #include "EntityManager/Entity.hpp"
+#include "EntityManager/WaveSpecification.hpp"
 #include <functional>
 #include <memory>
 #include <vector>
@@ -25,6 +26,7 @@ public:
   void AddEntity(std::unique_ptr<Entity> &entity);
   void SetBulletSpawnCallBack(
       std::function<void(std::unique_ptr<Bullet> &)> bulletSpawnCallback);
+  void SpawnWave(const WaveSpecification &waveSpec);
 
   // Access
   const Player *GetPlayer() const;
