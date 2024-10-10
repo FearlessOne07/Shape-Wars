@@ -30,8 +30,13 @@ void PlayerBullet::CheckActivity(const RenderContext &renderContext) {
   float maxHeight =
       (GetScreenHeight() - renderContext.marginY) / renderContext.scale;
 
-  if (_position.x < minWidth || _position.x > maxWidth ||
-      _position.y < minHeight || _position.y > maxHeight) {
+  Vector2 minBounds =
+      GetScreenToWorld2D({minWidth, minHeight}, renderContext.camera);
+  Vector2 maxBounds =
+      GetScreenToWorld2D({maxWidth, maxHeight}, renderContext.camera);
+
+  if (_position.x < minBounds.x || _position.x > maxBounds.x ||
+      _position.y < minBounds.y || _position.y > maxBounds.y) {
     _isAlive = false;
   }
 }

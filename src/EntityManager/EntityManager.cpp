@@ -1,5 +1,8 @@
 #include "EntityManager/EntityManager.hpp"
+#include "EntityManager/WaveSpecification.hpp"
 #include "Player/Player.hpp"
+#include <random>
+#include <vector>
 
 void EntityManager::Init() {
   _entities = std::vector<std::unique_ptr<Entity>>();
@@ -54,4 +57,10 @@ void EntityManager::SpawnPlayer(Color color, float speed,
 void EntityManager::Reset() {
   _entities.clear();
   _player = nullptr;
+}
+
+void EntityManager::SpawnWave(const WaveSpecification &waveSpec) {
+
+  for (int i = 0; i < waveSpec.count; i++) {
+  }
 }

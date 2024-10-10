@@ -80,6 +80,8 @@ void Player::Shoot(const RenderContext &rendercontext) {
   mousePosition.y =
       (mousePosition.y - rendercontext.marginY) / rendercontext.scale;
 
+  mousePosition = GetScreenToWorld2D(mousePosition, rendercontext.camera);
+
   std::unique_ptr<Bullet> bullet =
       std::make_unique<PlayerBullet>(_position, 1000.f, mousePosition);
   _bulletSpawnCallback(bullet);
