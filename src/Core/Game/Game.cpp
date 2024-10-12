@@ -35,8 +35,8 @@ void Game::Run() {
     int windowWidth = GetScreenWidth();
     int windowHeight = GetScreenHeight();
 
-    float scale =
-        std::min(windowWidth / _gameWidth, windowHeight / _gameHeight);
+    float scale = std::min((float)windowWidth / _gameWidth,
+                           (float)windowHeight / _gameHeight);
 
     int marginX = (windowWidth - (_gameWidth * scale)) / 2;
     int marginY = (windowHeight - (_gameHeight * scale)) / 2;
@@ -65,5 +65,9 @@ void Game::GetInput() {
     ToggleFullscreen();
   }
 }
-void Game::End() { CloseWindow(); }
+void Game::End() {
+  UnloadRenderTexture(_renderTexture);
+  CloseWindow();
+}
+
 void Game::QuitCallBack() { _running = false; }

@@ -1,7 +1,8 @@
 #include "GameScene.hpp"
 #include "BulletManager/BulletManager.hpp"
+#include "Core/Game/RenderContext.hpp"
 #include "Core/SceneManager/SceneTransition.hpp"
-#include "Enemies/Chaser/Chaser.hpp"
+#include "EntityManager/WaveSpecification.hpp"
 #include "raylib.h"
 #include <memory>
 
@@ -18,11 +19,18 @@ void GameScene::Enter() {
         this->_bulletManager.SpawnBullet(bullet);
       });
 
-  _camera.zoom = 0.7;
+  _entityManager.SetGetBulletsCallBack(
+      [this]() -> const std::vector<std::unique_ptr<Bullet>> & {
+        return this->_bulletManager.GetBullets();
+      });
+
+  _camera.zoom = 0.8;
   _camera.offset = {0, 0};
 
+  _spawnDuration = 3.f;
+  _spawnTimer = 0.f;
+
   SpawnPlayer();
-  SpawnWave();
 }
 
 void GameScene::GetInput() {
@@ -47,6 +55,8 @@ void GameScene::Render() {
 }
 
 void GameScene::Update(float dt, const RenderContext &rendercontext) {
+
+  SpawnWave(dt, rendercontext);
   GetInput();
   UpdateCamera(dt, rendercontext);
   _entityManager.Update(dt, rendercontext);
@@ -56,7 +66,7 @@ void GameScene::Update(float dt, const RenderContext &rendercontext) {
 SceneTransition GameScene::GetSceneTransition() { return _sceneTransition; }
 
 void GameScene::SpawnPlayer() {
-  _entityManager.SpawnPlayer(BLUE, 500.f, 3, Vector2{100, 100});
+  _entityManager.SpawnPlayer(BLUE, 500.f, 3, Vector2{0, 0});
 }
 
 void GameScene::UpdateCamera(float dt, const RenderContext &rendercontext) {
@@ -65,10 +75,10 @@ void GameScene::UpdateCamera(float dt, const RenderContext &rendercontext) {
   rendercontext.camera = _camera;
 }
 
-void GameScene::SpawnWave() {
-  for (float i = 1; i <= 0; ++i) {
-    std::unique_ptr<Entity> enemy =
-        std::make_unique<Chaser>(RED, 200.f, 2, Vector2{i * 100, i * 200});
-    _entityManager.AddEntity(enemy);
+void GameScene::SpawnWave(float dt, const RenderContext &rendercontext) {
+  _spawnTimer += dt;
+  if (_spawnTimer > _spawnDuration) {
+    _spawnTimer = -131132131231.f;
+    _entityManager.SpawnWave({10, {EnemyName::CHASER}}, rendercontext);
   }
 }

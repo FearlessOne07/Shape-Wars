@@ -4,7 +4,10 @@
 #include "raymath.h"
 
 Chaser::Chaser(Color color, float speed, int acceleration, Vector2 position)
-    : Entity(color, speed, acceleration, position) {}
+    : Entity(color, speed, acceleration, position) {
+  _rotationSpeed = 300.f;
+  _rotation = 0;
+}
 
 void Chaser::ChasePlayer() {
   Vector2 direction =
@@ -22,10 +25,15 @@ void Chaser::UpdateMovement(float dt) {
 }
 
 void Chaser::Update(float dt, const RenderContext &rendercontext) {
+  Rotate(dt);
   ChasePlayer();
   UpdateMovement(dt);
 }
 
-void Chaser::Rotate(float dt) {}
-void Chaser::Render() { DrawPolyLinesEx(_position, 3, _radius, 0, 3, _color); }
+void Chaser::Rotate(float dt) { _rotation += dt * _rotationSpeed; }
+
+void Chaser::Render() {
+  DrawPolyLinesEx(_position, 3, _radius, _rotation, 5, _color);
+}
+
 bool Chaser::IsColliding(const Entity &other) { return false; }

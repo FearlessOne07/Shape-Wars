@@ -29,6 +29,7 @@ protected: // Attributes
   float _rotationSpeed;
 
   // State
+  int _healthPoints;
   bool _isAlve;
 
   std::function<const Player *()> _getPlayerCallBack;
@@ -52,15 +53,22 @@ public:
       std::function<void(std::unique_ptr<Bullet> &)> bulletCallBack) {
     _bulletSpawnCallback = bulletCallBack;
   }
+
   void SetGetPlayerCallBack(std::function<const Player *()> getPlayerCallBack) {
     _getPlayerCallBack = getPlayerCallBack;
   }
 
   // Access
   Vector2 GetPosition() const { return _position; }
+  float GetRadius() const { return _radius; }
+
+  void SetIsAlive(bool alive) { _isAlve = alive; }
 
   // State
   virtual bool IsColliding(const Entity &other) = 0;
   bool CanShoot() const { return _canShoot; }
   bool IsAlive() const { return _isAlve; }
+
+  int GetHp() const { return _healthPoints; }
+  void SetHp(int newHp) { _healthPoints = newHp; }
 };
