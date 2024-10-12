@@ -17,4 +17,6 @@ public:
 
   // Bullets
   void SpawnBullet(std::unique_ptr<Bullet> &bullet);
+
+  const std::vector<std::unique_ptr<Bullet>> &GetBullets() const;
 };

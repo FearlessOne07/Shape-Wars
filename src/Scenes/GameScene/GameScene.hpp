@@ -11,11 +11,15 @@ private:
   BulletManager _bulletManager;
   Camera2D _camera;
 
+  // Wave management
+  float _spawnTimer;
+  float _spawnDuration;
+
 private:
-  void UpdateCamera(float dt, const RenderContext& renderContext);
+  void UpdateCamera(float dt, const RenderContext &renderContext);
   void GetInput() override;
   void SpawnPlayer();
-  void SpawnWave();
+  void SpawnWave(float dt, const RenderContext &rendercontext);
 
 private:
 public:

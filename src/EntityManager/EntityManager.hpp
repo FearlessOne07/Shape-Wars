@@ -3,15 +3,26 @@
 #include "Core/Game/RenderContext.hpp"
 #include "EntityManager/Entity.hpp"
 #include "EntityManager/WaveSpecification.hpp"
+#include "raylib.h"
 #include <functional>
 #include <memory>
 #include <vector>
 
 class EntityManager {
+
+  using GetBulletsCallBack =
+      std::function<const std::vector<std::unique_ptr<Bullet>> &()>;
+
 private:
   std::vector<std::unique_ptr<Entity>> _entities;
   std::function<void(std::unique_ptr<Bullet> &)> _bulletSpawnCallback;
+  GetBulletsCallBack _getBulletsCallback;
   std::unique_ptr<Entity> _player;
+
+private: // Methods
+  bool ValidatePosition(Vector2 position);
+  void CheckBulletCollisions();
+  void RemoveDeadEntities();
 
 public:
   // Core
@@ -24,9 +35,13 @@ public:
   void SpawnPlayer(Color color, float speed, int accelerationFactor,
                    Vector2 startPos);
   void AddEntity(std::unique_ptr<Entity> &entity);
+  void SpawnWave(const WaveSpecification &waveSpec,
+                 const RenderContext &rendercontext);
+
+  // Callbacks
   void SetBulletSpawnCallBack(
       std::function<void(std::unique_ptr<Bullet> &)> bulletSpawnCallback);
-  void SpawnWave(const WaveSpecification &waveSpec);
+  void SetGetBulletsCallBack(GetBulletsCallBack callback);
 
   // Access
   const Player *GetPlayer() const;

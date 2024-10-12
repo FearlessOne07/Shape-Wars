@@ -17,7 +17,16 @@ public:
         _isAlive(true) {}
 
   virtual ~Bullet() {}
-  virtual void Update(float dt,const RenderContext &renderContext) = 0;
+  virtual void Update(float dt, const RenderContext &renderContext) = 0;
   virtual void Render() = 0;
+
+  // Access
+  Vector2 GetPosition() const { return _position; }
+  float GetRadius() const { return _radius; }
+
+  // Mutation
+  void SetIsAlive(bool alive) { _isAlive = alive; }
+
+  // State
   bool IsAlive() { return _isAlive; }
 };
