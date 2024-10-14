@@ -2,8 +2,11 @@
 
 #include "Core/Game/RenderContext.hpp"
 #include "EntityManager/Entity.hpp"
+#include "EntityManager/EntitySpec.hpp"
 #include "EntityManager/WaveSpecification.hpp"
 #include "raylib.h"
+#include "json/value.h"
+#include <filesystem>
 #include <functional>
 #include <memory>
 #include <vector>
@@ -19,10 +22,15 @@ private:
   GetBulletsCallBack _getBulletsCallback;
   std::unique_ptr<Entity> _player;
 
+  // Config
+  std::unordered_map<std::string, Json::Value> _entityConfigs;
+
 private: // Methods
   bool ValidatePosition(Vector2 position);
   void CheckBulletCollisions();
   void RemoveDeadEntities();
+  void LoadConfigs(const std::filesystem::path &path);
+  EntitySpec SpecFromJson(const Json::Value &json);
 
 public:
   // Core

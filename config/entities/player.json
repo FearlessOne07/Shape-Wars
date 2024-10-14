@@ -1,0 +1,9 @@
+{
+  "radius": 30,
+  "speed": 500,
+  "acceleration": 3,
+  "rotation-speed": 200,
+  "health-points": 100,
+  "can-shoot": true,
+  "fire-rate": 0.5
+}

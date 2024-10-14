@@ -26,6 +26,7 @@ void GameScene::Enter() {
 
   _camera.zoom = 0.8;
   _camera.offset = {0, 0};
+  _camera.target = {0, 0};
 
   _spawnDuration = 3.f;
   _spawnTimer = 0.f;
