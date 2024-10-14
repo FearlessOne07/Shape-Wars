@@ -3,17 +3,26 @@
 #include "BulletManager/PlayerBullet/PlayerBullet.hpp"
 #include "Core/Game/RenderContext.hpp"
 #include "Enemies/Chaser/Chaser.hpp"
+#include "EntityManager/EntitySpec.hpp"
 #include "EntityManager/WaveSpecification.hpp"
 #include "Player/Player.hpp"
 #include "raylib.h"
 #include "raymath.h"
+#include "json/reader.h"
+#include "json/value.h"
+#include "json/writer.h"
 #include <algorithm>
+#include <cassert>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
 #include <memory>
 #include <random>
 #include <utility>
 #include <vector>
 
 void EntityManager::Init() {
+  LoadConfigs("config/entities");
   _entities = std::vector<std::unique_ptr<Entity>>();
   _entities.reserve(30);
   _bulletSpawnCallback = nullptr;
@@ -45,6 +54,7 @@ void EntityManager::AddEntity(std::unique_ptr<Entity> &entity) {
   if (entity->CanShoot()) {
     entity->SetBulletSpawnCallback(_bulletSpawnCallback);
   }
+
   entity->SetGetPlayerCallBack([this]() { return this->GetPlayer(); });
   _entities.emplace_back(std::move(entity));
 }
@@ -59,8 +69,9 @@ const Player *EntityManager::GetPlayer() const {
 void EntityManager::SpawnPlayer(Color color, float speed,
                                 int accelerationFactor, Vector2 startPos) {
   if (!_player) {
-    _player =
-        std::make_unique<Player>(color, speed, accelerationFactor, startPos);
+    EntitySpec spec = SpecFromJson(_entityConfigs["player"]);
+    spec.position = {0};
+    _player = std::make_unique<Player>(spec);
     _player->SetBulletSpawnCallback(_bulletSpawnCallback);
   }
 }
@@ -105,16 +116,21 @@ void EntityManager::SpawnWave(const WaveSpecification &waveSpec,
     }
 
     EnemyName type = waveSpec.pool[poolDist(gen)];
-
+    EntitySpec spec;
     switch (type) {
     case EnemyName::CHASER: {
-      auto enemy =
-          std::make_unique<Chaser>(RED, 90, 2, Vector2{positionX, positionY});
+      Json::StyledWriter writer;
+      spec = SpecFromJson(_entityConfigs["chaser"]);
+
+      spec.position = {positionX, positionY};
+      auto enemy = std::make_unique<Chaser>(spec);
       enemy->SetGetPlayerCallBack([this]() { return this->GetPlayer(); });
       _entities.emplace_back(std::move(enemy));
       break;
     }
     }
+
+    std::cout << "Spawned Enemy " << i << "\n";
   }
 }
 
@@ -128,18 +144,16 @@ bool EntityManager::ValidatePosition(Vector2 position) {
 }
 
 void EntityManager::CheckBulletCollisions() {
-
   for (auto &b : _getBulletsCallback()) {
-
     PlayerBullet *playerBullet = nullptr;
     if ((playerBullet = dynamic_cast<PlayerBullet *>(b.get()))) {
       for (auto &e : _entities) {
         Vector2 playerBulletPos = playerBullet->GetPosition();
         float playerBulletRad = playerBullet->GetRadius();
-
         if (CheckCollisionCircles(playerBulletPos, playerBulletRad,
-                                  e->GetPosition(), e->GetRadius())) {
-          e->SetIsAlive(false);
+                                  e->GetPosition(), e->GetRadius()) &&
+            b->IsAlive()) {
+          e->SetHp(e->GetHp() - playerBullet->GetDamage());
           playerBullet->SetIsAlive(false);
         }
       }
@@ -147,14 +161,41 @@ void EntityManager::CheckBulletCollisions() {
   }
 }
 
-void EntityManager::SetGetBulletsCallBack(GetBulletsCallBack callBack) {
-  _getBulletsCallback = callBack;
-}
-
 void EntityManager::RemoveDeadEntities() {
-
   auto it =
       std::remove_if(_entities.begin(), _entities.end(),
                      [](std::unique_ptr<Entity> &e) { return !e->IsAlive(); });
   _entities.erase(it, _entities.end());
+}
+
+void EntityManager::SetGetBulletsCallBack(GetBulletsCallBack callBack) {
+  _getBulletsCallback = callBack;
+}
+
+void EntityManager::LoadConfigs(const std::filesystem::path &path) {
+  Json::Reader reader;
+
+  for (auto &entry : std::filesystem::directory_iterator(path)) {
+    if (entry.path().extension() == ".json") {
+      std::fstream file(entry.path());
+      Json::Value config;
+
+      if (reader.parse(file, config)) {
+        _entityConfigs[entry.path().stem().string()] = config;
+      }
+    }
+  }
+}
+
+EntitySpec EntityManager::SpecFromJson(const Json::Value &json) {
+  assert((Json::nullValue != json.type()));
+  if (Json::nullValue != json.type()) {
+    return {
+        json["radius"].asFloat(),       json["speed"].asFloat(),
+        json["acceleration"].asFloat(), json["rotation-speed"].asFloat(),
+        json["health-points"].asInt(),  json["can-shoot"].asBool(),
+        json["fire-rate"].asFloat(),
+    };
+  }
+  return {};
 }

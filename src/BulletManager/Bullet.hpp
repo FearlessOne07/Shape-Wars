@@ -9,12 +9,14 @@ protected:
   float _speed;
   float _radius;
 
+  float _damage;
+
   bool _isAlive;
 
 public:
-  Bullet(Vector2 position, float speed)
+  Bullet(Vector2 position, float speed, float damage)
       : _position(position), _speed(speed), _velocity({0}), _radius(10),
-        _isAlive(true) {}
+        _damage(damage), _isAlive(true) {}
 
   virtual ~Bullet() {}
   virtual void Update(float dt, const RenderContext &renderContext) = 0;
@@ -29,4 +31,6 @@ public:
 
   // State
   bool IsAlive() { return _isAlive; }
+
+  float GetDamage() const { return _damage; }
 };

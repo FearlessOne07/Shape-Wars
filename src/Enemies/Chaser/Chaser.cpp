@@ -1,13 +1,11 @@
 #include "Chaser.hpp"
+#include "EntityManager/EntitySpec.hpp"
 #include "Player/Player.hpp"
 #include "raylib.h"
 #include "raymath.h"
+#include <iostream>
 
-Chaser::Chaser(Color color, float speed, int acceleration, Vector2 position)
-    : Entity(color, speed, acceleration, position) {
-  _rotationSpeed = 300.f;
-  _rotation = 0;
-}
+Chaser::Chaser(EntitySpec entitySpec) : Entity(entitySpec) { _color = RED; }
 
 void Chaser::ChasePlayer() {
   Vector2 direction =
@@ -28,12 +26,18 @@ void Chaser::Update(float dt, const RenderContext &rendercontext) {
   Rotate(dt);
   ChasePlayer();
   UpdateMovement(dt);
+  CheckActivity();
 }
 
 void Chaser::Rotate(float dt) { _rotation += dt * _rotationSpeed; }
 
 void Chaser::Render() {
+  std::cout << "radius; " << _radius << "\n";
   DrawPolyLinesEx(_position, 3, _radius, _rotation, 5, _color);
 }
 
-bool Chaser::IsColliding(const Entity &other) { return false; }
+void Chaser::CheckActivity() {
+  if (_healthPoints <= 0) {
+    _isAlve = false;
+  }
+}

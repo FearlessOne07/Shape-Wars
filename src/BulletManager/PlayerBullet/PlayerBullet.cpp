@@ -2,8 +2,9 @@
 #include "raylib.h"
 #include "raymath.h"
 
-PlayerBullet::PlayerBullet(Vector2 position, float speed, Vector2 target)
-    : Bullet(position, speed), _target(target) {
+PlayerBullet::PlayerBullet(Vector2 position, float speed, float damage,
+                           Vector2 target)
+    : Bullet(position, speed, damage), _target(target) {
   _velocity = Vector2Subtract(_target, _position);
   _velocity = Vector2Normalize(_velocity);
 }

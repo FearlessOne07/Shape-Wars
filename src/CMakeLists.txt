@@ -15,6 +15,7 @@ target_sources(main    # No quotes around "main"
 target_include_directories(main
   PUBLIC
   "${CMAKE_SOURCE_DIR}/vendor/raylib/src/"
+  "${CMAKE_SOURCE_DIR}/vendor/jsoncpp/include/"
   "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
@@ -26,4 +27,5 @@ target_link_directories(main
 target_link_libraries(main
   PRIVATE
   raylib
+  jsoncpp
 )

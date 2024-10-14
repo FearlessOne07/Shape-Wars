@@ -14,7 +14,7 @@ private: // Methods
 public:
   PlayerBullet();
 
-  PlayerBullet(Vector2 position, float speed, Vector2 target);
-  void Update(float dt,const RenderContext &renderContext) override;
+  PlayerBullet(Vector2 position, float speed, float damage, Vector2 target);
+  void Update(float dt, const RenderContext &renderContext) override;
   void Render() override;
 };
