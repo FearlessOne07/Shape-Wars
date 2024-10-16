@@ -18,8 +18,8 @@ private:
 private:
   void UpdateCamera(float dt, const RenderContext &renderContext);
   void GetInput() override;
-  void SpawnPlayer();
   void SpawnWave(float dt, const RenderContext &rendercontext);
+  void SpawnPlayer();
 
 private:
 public:

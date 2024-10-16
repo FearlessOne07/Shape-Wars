@@ -26,11 +26,15 @@ private:
   std::unordered_map<std::string, Json::Value> _entityConfigs;
 
 private: // Methods
+  // Utitliy
   bool ValidatePosition(Vector2 position);
-  void CheckBulletCollisions();
-  void RemoveDeadEntities();
   void LoadConfigs(const std::filesystem::path &path);
   EntitySpec SpecFromJson(const Json::Value &json);
+
+  // Core
+  void CheckBulletCollisions();
+  void RemoveDeadEntities();
+  void CheckPlayerCollisions();
 
 public:
   // Core

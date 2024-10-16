@@ -5,5 +5,5 @@
   "rotation-speed": 200,
   "health-points": 100,
   "can-shoot": true,
-  "fire-rate": 0.5
+  "fire-rate": 0.4
 }

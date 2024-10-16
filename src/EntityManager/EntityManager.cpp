@@ -24,22 +24,31 @@
 void EntityManager::Init() {
   LoadConfigs("config/entities");
   _entities = std::vector<std::unique_ptr<Entity>>();
-  _entities.reserve(30);
+  _entities.reserve(50);
   _bulletSpawnCallback = nullptr;
   _player = nullptr;
 }
 
 void EntityManager::Update(float dt, const RenderContext &rendercontext) {
-  _player->Update(dt, rendercontext);
+
+  if (_player && _player->IsAlive()) {
+    _player->Update(dt, rendercontext);
+  }
+
   for (auto &e : _entities) {
     e->Update(dt, rendercontext);
   }
+
   CheckBulletCollisions();
   RemoveDeadEntities();
 }
 
 void EntityManager::Render() {
-  _player->Render();
+
+  if (_player && _player->IsAlive()) {
+    _player->Render();
+  }
+
   for (auto &e : _entities) {
     e->Render();
   }
@@ -108,6 +117,7 @@ void EntityManager::SpawnWave(const WaveSpecification &waveSpec,
     float positionX = sin(angle) * radius;
     float positionY = cos(angle) * radius;
     validPosition = ValidatePosition(Vector2{positionX, positionY});
+
     for (int a = 0; a < 10 && !validPosition; a++) {
       angle = angleDist(gen);
       positionX = sin(angle) * radius;
@@ -117,14 +127,15 @@ void EntityManager::SpawnWave(const WaveSpecification &waveSpec,
 
     EnemyName type = waveSpec.pool[poolDist(gen)];
     EntitySpec spec;
+
     switch (type) {
     case EnemyName::CHASER: {
-      Json::StyledWriter writer;
       spec = SpecFromJson(_entityConfigs["chaser"]);
-
       spec.position = {positionX, positionY};
+
       auto enemy = std::make_unique<Chaser>(spec);
       enemy->SetGetPlayerCallBack([this]() { return this->GetPlayer(); });
+
       _entities.emplace_back(std::move(enemy));
       break;
     }
@@ -166,6 +177,23 @@ void EntityManager::RemoveDeadEntities() {
       std::remove_if(_entities.begin(), _entities.end(),
                      [](std::unique_ptr<Entity> &e) { return !e->IsAlive(); });
   _entities.erase(it, _entities.end());
+}
+
+void EntityManager::CheckPlayerCollisions() {
+
+  if (_player && _player->IsAlive()) {
+    for (auto &e : _entities) {
+      if (e->IsAlive()) {
+
+        Vector2 playerPos = _player->GetPosition();
+        float playerRadius = _player->GetRadius();
+
+        if (CheckCollisionCircles(playerPos, playerRadius, e->GetPosition(),
+                                  e->GetRadius())) {
+        }
+      }
+    }
+  }
 }
 
 void EntityManager::SetGetBulletsCallBack(GetBulletsCallBack callBack) {
