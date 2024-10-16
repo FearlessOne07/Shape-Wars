@@ -3,7 +3,6 @@
 #include "Player/Player.hpp"
 #include "raylib.h"
 #include "raymath.h"
-#include <iostream>
 
 Chaser::Chaser(EntitySpec entitySpec) : Entity(entitySpec) { _color = RED; }
 
@@ -32,7 +31,6 @@ void Chaser::Update(float dt, const RenderContext &rendercontext) {
 void Chaser::Rotate(float dt) { _rotation += dt * _rotationSpeed; }
 
 void Chaser::Render() {
-  std::cout << "radius; " << _radius << "\n";
   DrawPolyLinesEx(_position, 3, _radius, _rotation, 5, _color);
 }
 

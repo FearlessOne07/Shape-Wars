@@ -8,6 +8,8 @@
 
 Player::Player(EntitySpec entitySpec) : Entity(entitySpec) {
 
+  _isAlve = true;
+
   // Rotation
   _targetRotation = 0.5f;
   _rotation = 0.f;
@@ -25,7 +27,7 @@ void Player::Update(float dt, const RenderContext &rendercontext) {
 }
 
 void Player::Render() {
-  DrawPolyLinesEx(_position, 8, _radius, _rotation, 4, _color);
+  DrawPolyLinesEx(_position, 6, _radius, _rotation, 6, _color);
 }
 
 void Player::GetInput(const RenderContext &rendercontext) {
@@ -70,8 +72,8 @@ void Player::UpdateMovement(float dt) {
 }
 
 void Player::Shoot(const RenderContext &rendercontext) {
-  Vector2 mousePosition = GetMousePosition();
 
+  Vector2 mousePosition = GetMousePosition();
   mousePosition.x =
       (mousePosition.x - rendercontext.marginX) / rendercontext.scale;
   mousePosition.y =

@@ -2,7 +2,9 @@
 #include "BulletManager/BulletManager.hpp"
 #include "Core/Game/RenderContext.hpp"
 #include "Core/SceneManager/SceneTransition.hpp"
+#include "EntityManager/Entity.hpp"
 #include "EntityManager/WaveSpecification.hpp"
+#include "Player/Player.hpp"
 #include "raylib.h"
 #include <memory>
 
@@ -56,12 +58,17 @@ void GameScene::Render() {
 }
 
 void GameScene::Update(float dt, const RenderContext &rendercontext) {
-
   SpawnWave(dt, rendercontext);
   GetInput();
   UpdateCamera(dt, rendercontext);
   _entityManager.Update(dt, rendercontext);
   _bulletManager.Update(dt, rendercontext);
+
+  const Entity *player =
+      static_cast<const Entity *>(_entityManager.GetPlayer());
+
+  if (player && !player->IsAlive()) {
+  }
 }
 
 SceneTransition GameScene::GetSceneTransition() { return _sceneTransition; }
