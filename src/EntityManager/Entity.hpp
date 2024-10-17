@@ -9,31 +9,32 @@ class Player;
 class Entity {
 protected:
   // Initialized Attributes
-  Color _color;
-  float _radius;
-  float _speed;
-  int _acceleration;
-  float _rotationSpeed;
-  int _healthPoints;
-  bool _canShoot;
+  Color _color = WHITE;
+  float _radius = 0.f;
+  float _speed = 0.f;
+  int _acceleration = 0.f;
+  float _rotationSpeed = 0.f;
+  int _healthPoints = 0;
+  bool _canShoot = false;
+  float _damage = 0.f;
 
-  float _fireRate;
-  Vector2 _velocity;
-  Vector2 _targetVelocity;
-  Vector2 _position;
+  float _fireRate = 0, f;
+  Vector2 _velocity = {0.f};
+  Vector2 _targetVelocity = {0.f};
+  Vector2 _position = {0.f};
 
   // Shooting
-  float _fireTimer;
+  float _fireTimer = {0.f};
   std::function<void(std::unique_ptr<Bullet> &)> _bulletSpawnCallback;
 
   // Rotation
-  float _rotation;
-  float _targetRotation;
-  float _rotationAccelertionFactor;
-  float _rotationVelocity;
+  float _rotation = 0.f;
+  float _targetRotation = 0.f;
+  float _rotationAccelertionFactor = 0.f;
+  float _rotationVelocity = 0.f;
 
   // State
-  bool _isAlve;
+  bool _isAlve = true;
 
   std::function<const Player *()> _getPlayerCallBack;
 
@@ -55,6 +56,7 @@ public:
     _healthPoints = entitySpec.healthPoints;
     _canShoot = entitySpec.canShoot;
     _fireRate = entitySpec.fireRate;
+    _damage = entitySpec.damage;
 
     // Determined
     _position = entitySpec.position;

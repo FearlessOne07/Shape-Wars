@@ -5,7 +5,7 @@
 
 class PlayerBullet : public Bullet {
 private:
-  Vector2 _target;
+  Vector2 _target = {0.f};
 
 private: // Methods
   void UpdateMovment(float dt);
