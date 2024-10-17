@@ -44,8 +44,7 @@ public:
   void Reset();
 
   // Entities
-  void SpawnPlayer(Color color, float speed, int accelerationFactor,
-                   Vector2 startPos);
+  void SpawnPlayer();
   void AddEntity(std::unique_ptr<Entity> &entity);
   void SpawnWave(const WaveSpecification &waveSpec,
                  const RenderContext &rendercontext);

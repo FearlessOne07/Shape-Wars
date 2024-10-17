@@ -6,6 +6,7 @@
 #include "EntityManager/WaveSpecification.hpp"
 #include "Player/Player.hpp"
 #include "raylib.h"
+#include <iostream>
 #include <memory>
 
 void GameScene::Enter() {
@@ -49,12 +50,20 @@ void GameScene::Exit() {
 
 void GameScene::Render() {
   ClearBackground(BLACK);
+  // Debug
+  DrawText(TextFormat("FPS: %i", GetFPS()), 10, 0, 40, WHITE);
+  DrawText(TextFormat("Camera target: %i, %i", (int)_camera.target.x,
+                      (int)_camera.offset.y),
+           10, 50, 40, WHITE);
+  DrawText(TextFormat("Player Position: %i, %i",
+                      (int)_entityManager.GetPlayer()->GetPosition().x,
+                      (int)_entityManager.GetPlayer()->GetPosition().y),
+           10, 100, 40, WHITE);
+
   BeginMode2D(_camera);
-  DrawCircle(0, 0, 5, RED);
   _entityManager.Render();
   _bulletManager.Render();
   EndMode2D();
-  DrawText(TextFormat("FPS: %i", GetFPS()), 30, 30, 48, WHITE);
 }
 
 void GameScene::Update(float dt, const RenderContext &rendercontext) {
@@ -63,19 +72,11 @@ void GameScene::Update(float dt, const RenderContext &rendercontext) {
   UpdateCamera(dt, rendercontext);
   _entityManager.Update(dt, rendercontext);
   _bulletManager.Update(dt, rendercontext);
-
-  const Entity *player =
-      static_cast<const Entity *>(_entityManager.GetPlayer());
-
-  if (player && !player->IsAlive()) {
-  }
 }
 
 SceneTransition GameScene::GetSceneTransition() { return _sceneTransition; }
 
-void GameScene::SpawnPlayer() {
-  _entityManager.SpawnPlayer(BLUE, 500.f, 3, Vector2{0, 0});
-}
+void GameScene::SpawnPlayer() { _entityManager.SpawnPlayer(); }
 
 void GameScene::UpdateCamera(float dt, const RenderContext &rendercontext) {
   _camera.offset.x = rendercontext.gameWidth / 2;

@@ -4,14 +4,14 @@
 
 class Bullet {
 protected:
-  Vector2 _position;
-  Vector2 _velocity;
-  float _speed;
-  float _radius;
+  Vector2 _position = {0.f};
+  Vector2 _velocity = {0.f};
+  float _speed = 0.f;
+  float _radius = 0.f;
 
-  float _damage;
+  float _damage = 0.f;
 
-  bool _isAlive;
+  bool _isAlive = true;
 
 public:
   Bullet(Vector2 position, float speed, float damage)

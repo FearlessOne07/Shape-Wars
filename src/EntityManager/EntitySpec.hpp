@@ -9,12 +9,8 @@ struct EntitySpec {
   int healthPoints;
   bool canShoot;
   float fireRate;
+  float damage;
 
   // Determined By eternal body
   Vector2 position;
-
-  operator bool() {
-    return radius && speed && acceleration && rotationSpeed && healthPoints &&
-           fireRate && ((!fireRate && !canShoot) || (fireRate && canShoot));
-  }
 };

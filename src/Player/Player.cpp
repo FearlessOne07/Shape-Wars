@@ -12,9 +12,7 @@ Player::Player(EntitySpec entitySpec) : Entity(entitySpec) {
 
   // Rotation
   _targetRotation = 0.5f;
-  _rotation = 0.f;
   _rotationAccelertionFactor = 0.5;
-
   _color = BLUE;
 }
 
@@ -27,7 +25,7 @@ void Player::Update(float dt, const RenderContext &rendercontext) {
 }
 
 void Player::Render() {
-  DrawPolyLinesEx(_position, 6, _radius, _rotation, 6, _color);
+  DrawPolyLinesEx(_position, 6, _radius, _rotation, 3, _color);
 }
 
 void Player::GetInput(const RenderContext &rendercontext) {
@@ -82,7 +80,7 @@ void Player::Shoot(const RenderContext &rendercontext) {
   mousePosition = GetScreenToWorld2D(mousePosition, rendercontext.camera);
 
   std::unique_ptr<Bullet> bullet =
-      std::make_unique<PlayerBullet>(_position, 1000.f, 5.f, mousePosition);
+      std::make_unique<PlayerBullet>(_position, 1000.f, _damage, mousePosition);
   _bulletSpawnCallback(bullet);
 }
 

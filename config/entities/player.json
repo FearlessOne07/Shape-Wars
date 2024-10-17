@@ -3,7 +3,8 @@
   "speed": 500,
   "acceleration": 3,
   "rotation-speed": 200,
-  "health-points": 100,
+  "health-points": 10,
   "can-shoot": true,
-  "fire-rate": 0.4
+  "fire-rate": 0.4,
+  "damage": 1
 }
