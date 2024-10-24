@@ -11,6 +11,7 @@ private:
   void UpdateTimers(float dt);
   void Rotate(float dt) override;
   void CheckActivity() override;
+  void Wrap(const RenderContext &rendercontext);
 
 public:
   Player(EntitySpec entitySpec);
