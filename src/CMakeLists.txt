@@ -10,6 +10,7 @@ target_sources(main    # No quotes around "main"
   "./EntityManager/EntityManager.cpp"
   "./BulletManager/PlayerBullet/PlayerBullet.cpp"
   "./Enemies/Chaser/Chaser.cpp"
+  "./WaveSpawner/WaveSpawner.cpp"
 )
 
 target_include_directories(main

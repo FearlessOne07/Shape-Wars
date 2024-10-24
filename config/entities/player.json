@@ -1,10 +1,12 @@
 {
+  "name": "player",
   "radius": 30,
   "speed": 500,
   "acceleration": 3,
   "rotation-speed": 200,
   "health-points": 10,
   "can-shoot": true,
-  "fire-rate": 0.4,
-  "damage": 1
+  "fire-rate": 0.6,
+  "damage": 1,
+  "cost": 0
 }

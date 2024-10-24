@@ -1,5 +1,6 @@
 #pragma once
 #include "raylib.h"
+#include <string>
 struct EntitySpec {
   // Read-in
   float radius;
@@ -13,4 +14,8 @@ struct EntitySpec {
 
   // Determined By eternal body
   Vector2 position;
+
+  // Not Read By entity
+  int cost;
+  std::string name;
 };

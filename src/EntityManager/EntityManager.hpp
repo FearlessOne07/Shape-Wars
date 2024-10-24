@@ -4,6 +4,7 @@
 #include "EntityManager/Entity.hpp"
 #include "EntityManager/EntitySpec.hpp"
 #include "EntityManager/WaveSpecification.hpp"
+#include "WaveSpawner/WaveSpawner.hpp"
 #include "raylib.h"
 #include "json/value.h"
 #include <filesystem>
@@ -23,7 +24,11 @@ private:
   std::unique_ptr<Entity> _player;
 
   // Config
-  std::unordered_map<std::string, Json::Value> _entityConfigs;
+  std::unordered_map<int, Json::Value> _entityConfigs;
+  std::unordered_map<int, EntitySpec> _entitySpecs;
+
+  // Utitlity Classes
+  WaveSpawner _waveSpawner;
 
 private: // Methods
   // Utitliy

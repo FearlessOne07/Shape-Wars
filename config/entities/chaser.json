@@ -1,4 +1,5 @@
 {
+  "name": "chaser",
   "radius": 30,
   "speed": 90,
   "acceleration": 2,
@@ -6,5 +7,6 @@
   "health-points": 5,
   "can-shoot": false,
   "fire-rate": 0,
-  "damage": 1
+  "damage": 1,
+  "cost": 1
 }

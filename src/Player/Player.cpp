@@ -14,6 +14,9 @@ Player::Player(EntitySpec entitySpec) : Entity(entitySpec) {
   _targetRotation = 0.5f;
   _rotationAccelertionFactor = 0.5;
   _color = BLUE;
+
+  // Shooting
+  _fireTimer = _fireRate;
 }
 
 void Player::Update(float dt, const RenderContext &rendercontext) {
@@ -21,6 +24,7 @@ void Player::Update(float dt, const RenderContext &rendercontext) {
   UpdateTimers(dt);
   GetInput(rendercontext);
   UpdateMovement(dt);
+  Wrap(rendercontext);
   CheckActivity();
 }
 
@@ -51,12 +55,6 @@ void Player::GetInput(const RenderContext &rendercontext) {
       _fireTimer = 0.f;
       Shoot(rendercontext);
     }
-  }
-
-  if (IsKeyDown(KEY_SPACE)) {
-    _targetRotation = 2;
-  } else {
-    _targetRotation = 0.5;
   }
 }
 
@@ -104,5 +102,25 @@ void Player::Rotate(float dt) {
 void Player::CheckActivity() {
   if (_healthPoints <= 0) {
     _isAlve = false;
+  }
+}
+
+void Player::Wrap(const RenderContext &rendercontext) {
+
+  Vector2 minBounds = GetScreenToWorld2D({0, 0}, rendercontext.camera);
+  Vector2 maxBounds =
+      GetScreenToWorld2D({rendercontext.gameWidth, rendercontext.gameHeight},
+                         rendercontext.camera);
+
+  if (_position.x >= maxBounds.x + _radius) {
+    _position.x = minBounds.x - _radius;
+  } else if (_position.x <= minBounds.x - _radius) {
+    _position.x = maxBounds.x + _radius;
+  }
+
+  if (_position.y >= maxBounds.y + _radius) {
+    _position.y = minBounds.y - _radius;
+  } else if (_position.y <= minBounds.y - _radius) {
+    _position.y = maxBounds.y + _radius;
   }
 }
