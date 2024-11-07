@@ -8,5 +8,6 @@
   "can-shoot": true,
   "fire-rate": 0.6,
   "damage": 1,
-  "cost": 0
+  "cost": 0,
+  "can-clump": false
 }

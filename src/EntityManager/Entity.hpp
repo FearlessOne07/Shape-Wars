@@ -85,4 +85,6 @@ public:
 
   int GetHp() const { return _healthPoints; }
   void SetHp(int newHp) { _healthPoints = newHp; }
+
+  float GetDamage() const { return _damage; }
 };
