@@ -1,12 +1,13 @@
 {
   "name": "chaser",
   "radius": 30,
-  "speed": 90,
+  "speed": 100,
   "acceleration": 2,
   "rotation-speed": 100,
   "health-points": 5,
   "can-shoot": false,
   "fire-rate": 0,
   "damage": 1,
-  "cost": 1
+  "cost": 1,
+  "can-clump": true
 }

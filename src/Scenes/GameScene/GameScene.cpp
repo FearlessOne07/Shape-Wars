@@ -3,10 +3,8 @@
 #include "Core/Game/RenderContext.hpp"
 #include "Core/SceneManager/SceneTransition.hpp"
 #include "EntityManager/Entity.hpp"
-#include "EntityManager/WaveSpecification.hpp"
 #include "Player/Player.hpp"
 #include "raylib.h"
-#include <iostream>
 #include <memory>
 
 void GameScene::Enter() {
@@ -27,14 +25,13 @@ void GameScene::Enter() {
         return this->_bulletManager.GetBullets();
       });
 
-  _camera.zoom = 0.8;
+  _entityManager.SpawnPlayer();
+  _camera.zoom = 1.f;
   _camera.offset = {0, 0};
   _camera.target = {0, 0};
 
   _spawnDuration = 3.f;
   _spawnTimer = 0.f;
-
-  SpawnPlayer();
 }
 
 void GameScene::GetInput() {
@@ -59,6 +56,9 @@ void GameScene::Render() {
                       (int)_entityManager.GetPlayer()->GetPosition().x,
                       (int)_entityManager.GetPlayer()->GetPosition().y),
            10, 100, 40, WHITE);
+  DrawText(
+      TextFormat("Player Health: %i", (int)_entityManager.GetPlayer()->GetHp()),
+      10, 150, 40, WHITE);
 
   BeginMode2D(_camera);
   _entityManager.Render();
@@ -76,18 +76,10 @@ void GameScene::Update(float dt, const RenderContext &rendercontext) {
 
 SceneTransition GameScene::GetSceneTransition() { return _sceneTransition; }
 
-void GameScene::SpawnPlayer() { _entityManager.SpawnPlayer(); }
-
 void GameScene::UpdateCamera(float dt, const RenderContext &rendercontext) {
   _camera.offset.x = rendercontext.gameWidth / 2;
   _camera.offset.y = rendercontext.gameHeight / 2;
   rendercontext.camera = _camera;
 }
 
-void GameScene::SpawnWave(float dt, const RenderContext &rendercontext) {
-  _spawnTimer += dt;
-  if (_spawnTimer > _spawnDuration) {
-    _spawnTimer = -131132131231.f;
-    _entityManager.SpawnWave({10, {EnemyName::CHASER}}, rendercontext);
-  }
-}
+void GameScene::SpawnWave(float dt, const RenderContext &rendercontext) {}

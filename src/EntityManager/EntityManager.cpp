@@ -4,7 +4,6 @@
 #include "Core/Game/RenderContext.hpp"
 #include "Enemies/Chaser/Chaser.hpp"
 #include "EntityManager/EntitySpec.hpp"
-#include "EntityManager/WaveSpecification.hpp"
 #include "Player/Player.hpp"
 #include "WaveSpawner/WaveSpawner.hpp"
 #include "raylib.h"
@@ -14,7 +13,7 @@
 #include "json/writer.h"
 #include <algorithm>
 #include <cassert>
-#include <cstring>
+#include <cmath>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -31,29 +30,28 @@ void EntityManager::Init() {
   _getBulletsCallback = nullptr;
   _player = nullptr;
 
+  _entitiesToSpawn = {};
   _waveSpawner = WaveSpawner();
 }
 
 void EntityManager::Update(float dt, const RenderContext &rendercontext) {
 
+  SpawnWave(rendercontext, dt);
   if (_player && _player->IsAlive()) {
     _player->Update(dt, rendercontext);
   }
+  CheckPlayerCollisions();
 
   for (auto &e : _entities) {
     e->Update(dt, rendercontext);
   }
-
   CheckBulletCollisions();
   RemoveDeadEntities();
 }
 
 void EntityManager::Render() {
 
-  if (_player && _player->IsAlive()) {
-    _player->Render();
-  }
-
+  _player->Render();
   for (auto &e : _entities) {
     e->Render();
   }
@@ -73,16 +71,9 @@ void EntityManager::AddEntity(std::unique_ptr<Entity> &entity) {
   _entities.emplace_back(std::move(entity));
 }
 
-const Player *EntityManager::GetPlayer() const {
-  if (_player) {
-    return static_cast<Player *>(_player.get());
-  }
-  return nullptr;
-}
-
 void EntityManager::SpawnPlayer() {
   if (!_player && _bulletSpawnCallback) {
-    EntitySpec spec = _entitySpecs[0];
+    EntitySpec spec = _playerSpec;
     spec.position = {0};
     _player = std::make_unique<Player>(spec);
     _player->SetBulletSpawnCallback(_bulletSpawnCallback);
@@ -96,34 +87,44 @@ void EntityManager::Reset() {
   _player = nullptr;
 }
 
-void EntityManager::SpawnWave(const WaveSpecification &waveSpec,
-                              const RenderContext &rendercontext) {
+void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt) {
 
-  std::random_device rd;
-  std::mt19937_64 gen(rd());
+  if (_entities.size() == 0 && _timeSinceLastWave > _waveInterval) {
+    _entitiesToSpawn = _waveSpawner.SpawnWave(_entitySpecs);
+    _timeSinceLastWave = 0;
+  } else {
+    _timeSinceLastWave += dt;
+  }
 
-  std::uniform_real_distribution<float> angleDist(0, 2 * PI);
+  if (_entitiesToSpawn.size() > 0 &&
+      _entitySpawnTimer >= _entitySpawnInterval) {
 
-  float spawnRadiusMin = 400 / rendercontext.scale;
-  float spawnRadiusMax = 1000 / rendercontext.scale;
-  std::uniform_real_distribution<float> radiusDist(0.0f, 1.0f);
+    std::cout << "Spawing Enemies\n";
+    std::cout << "enemyToSpawn size: " << _entitiesToSpawn.size() << "\n";
+    // Initialize the random device
+    std::random_device rd;
+    std::mt19937_64 gen(rd());
 
-  _entities.reserve(_entities.size() + waveSpec.count);
+    // Define angle Distributions
+    std::uniform_real_distribution<float> angleDist(0, 2 * PI);
 
-  std::vector<int> enemiesToSpawn = _waveSpawner.SpawnWave(_entitySpecs);
+    // Define radius Distributions
+    std::uniform_real_distribution<float> radiusDist(0.2f, 1.f);
 
-  for (int enemy : enemiesToSpawn) {
+    Vector2 min = {0, 0};
+    Vector2 max = {GetScreenWidth() / 2.f, GetScreenHeight() / 2.f};
 
+    // Define angle variables
     bool validPosition = false;
     float angle = angleDist(gen);
-    float radius =
-        std::sqrt(radiusDist(gen)) * (spawnRadiusMax - spawnRadiusMin) +
-        spawnRadiusMin;
+    float radius = Vector2Distance(min, max);
 
+    // Generete Postion
     float positionX = sin(angle) * radius;
     float positionY = cos(angle) * radius;
     validPosition = ValidatePosition(Vector2{positionX, positionY});
 
+    // Validate and regenerate position if not valid
     for (int a = 0; a < 10 && !validPosition; a++) {
       angle = angleDist(gen);
       positionX = sin(angle) * radius;
@@ -131,14 +132,20 @@ void EntityManager::SpawnWave(const WaveSpecification &waveSpec,
       validPosition = ValidatePosition(Vector2{positionX, positionY});
     }
 
+    int enemy = _entitiesToSpawn.back();
     EntitySpec spec = _entitySpecs[enemy];
+    std::unique_ptr<Entity> enemyToSpawn;
     if (spec.name == "chaser") {
       spec.position = {positionX, positionY};
-      auto enemy = std::make_unique<Chaser>(spec);
-      enemy->SetGetPlayerCallBack([this]() { return this->GetPlayer(); });
-      _entities.emplace_back(std::move(enemy));
-      std::cout << "enemy spawned\n";
+      enemyToSpawn = std::make_unique<Chaser>(spec);
+      enemyToSpawn->SetGetPlayerCallBack(
+          [this]() { return this->GetPlayer(); });
     }
+    AddEntity(enemyToSpawn);
+    _entitiesToSpawn.pop_back();
+    _entitySpawnTimer = 0;
+  } else {
+    _entitySpawnTimer += dt;
   }
 }
 
@@ -186,6 +193,7 @@ void EntityManager::CheckPlayerCollisions() {
 
         if (CheckCollisionCircles(playerPos, playerRadius, e->GetPosition(),
                                   e->GetRadius())) {
+          _player->SetHp(_player->GetHp() - e->GetDamage());
         }
       }
     }
@@ -199,7 +207,7 @@ void EntityManager::SetGetBulletsCallBack(GetBulletsCallBack callBack) {
 void EntityManager::LoadConfigs(const std::filesystem::path &path) {
   Json::Reader reader;
 
-  int i = 1;
+  int i = 0;
   for (auto &entry : std::filesystem::directory_iterator(path)) {
     if (entry.path().extension() == ".json") {
       std::fstream file(entry.path());
@@ -209,7 +217,7 @@ void EntityManager::LoadConfigs(const std::filesystem::path &path) {
         if (entry.path().stem().string() != "player") {
           _entitySpecs[i++] = SpecFromJson(config);
         } else if (entry.path().stem().string() == "player") {
-          _entitySpecs[0] = SpecFromJson(config);
+          _playerSpec = SpecFromJson(config);
         }
       }
     }
@@ -218,6 +226,7 @@ void EntityManager::LoadConfigs(const std::filesystem::path &path) {
 
 EntitySpec EntityManager::SpecFromJson(const Json::Value &json) {
   assert((Json::nullValue != json.type()));
+
   if (Json::nullValue != json.type()) {
 
     EntitySpec spec;
@@ -240,3 +249,12 @@ EntitySpec EntityManager::SpecFromJson(const Json::Value &json) {
   }
   return {};
 }
+
+const Player *EntityManager::GetPlayer() const {
+  if (_player) {
+    return static_cast<Player *>(_player.get());
+  }
+  return nullptr;
+}
+
+int EntityManager::GetAliveCount() const { return _entities.size(); }

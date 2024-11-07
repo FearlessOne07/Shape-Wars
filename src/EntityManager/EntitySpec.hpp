@@ -11,6 +11,7 @@ struct EntitySpec {
   bool canShoot;
   float fireRate;
   float damage;
+  bool canClump;
 
   // Determined By eternal body
   Vector2 position;

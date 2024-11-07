@@ -8,11 +8,10 @@ WaveSpawner::SpawnWave(const std::unordered_map<int, EntitySpec> &specs) {
 
   _enemiesToSpawn.clear();
   _enemiesToSpawn.reserve(10);
-
   GenerateWave(specs);
-
   return _enemiesToSpawn;
 }
+
 void WaveSpawner::GenerateWave(
     const std::unordered_map<int, EntitySpec> &specs) {
 
