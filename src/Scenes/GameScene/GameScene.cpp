@@ -8,6 +8,8 @@
 #include <memory>
 
 void GameScene::Enter() {
+
+  // Init game scene systems
   _sceneTransition = {SceneRequest::NONE, SceneID::NONE};
   _bulletManager = BulletManager();
   _entityManager = EntityManager();
@@ -24,8 +26,10 @@ void GameScene::Enter() {
       [this]() -> const std::vector<std::unique_ptr<Bullet>> & {
         return this->_bulletManager.GetBullets();
       });
-
+  // Spawn the player
   _entityManager.SpawnPlayer();
+
+  // Init camera
   _camera.zoom = 1.f;
   _camera.offset = {0, 0};
   _camera.target = {0, 0};
@@ -35,18 +39,24 @@ void GameScene::Enter() {
 }
 
 void GameScene::GetInput() {
+
+  // Get input that affects this scene
   if (IsKeyPressed(KEY_ESCAPE)) {
     _sceneTransition = {SceneRequest::QUIT, SceneID::NONE};
   }
 }
 
 void GameScene::Exit() {
+  // Reser entity and bullet manager classes on exit
   _entityManager.Reset();
   _bulletManager.Reset();
 }
 
 void GameScene::Render() {
+
+  // Clear the screen
   ClearBackground(BLACK);
+
   // Debug
   DrawText(TextFormat("FPS: %i", GetFPS()), 10, 0, 40, WHITE);
   DrawText(TextFormat("Camera target: %i, %i", (int)_camera.target.x,
@@ -60,6 +70,7 @@ void GameScene::Render() {
       TextFormat("Player Health: %i", (int)_entityManager.GetPlayer()->GetHp()),
       10, 150, 40, WHITE);
 
+  // Being camera mode
   BeginMode2D(_camera);
   _entityManager.Render();
   _bulletManager.Render();
@@ -67,19 +78,20 @@ void GameScene::Render() {
 }
 
 void GameScene::Update(float dt, const RenderContext &rendercontext) {
-  SpawnWave(dt, rendercontext);
+  // Update the game scene objects
   GetInput();
   UpdateCamera(dt, rendercontext);
   _entityManager.Update(dt, rendercontext);
   _bulletManager.Update(dt, rendercontext);
 }
 
+// Scene transition request getter
 SceneTransition GameScene::GetSceneTransition() { return _sceneTransition; }
 
 void GameScene::UpdateCamera(float dt, const RenderContext &rendercontext) {
+
+  // Update camera
   _camera.offset.x = rendercontext.gameWidth / 2;
   _camera.offset.y = rendercontext.gameHeight / 2;
   rendercontext.camera = _camera;
 }
-
-void GameScene::SpawnWave(float dt, const RenderContext &rendercontext) {}

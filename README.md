@@ -14,7 +14,7 @@ enjoy, I guess?
 
 Run the following command
 
-``` shell
+```shell
 git clone https://github.com/FearlessOne07/Shape-Wars.git
 cd Shape-Wars
 cmake -S . -B build
@@ -26,7 +26,7 @@ bin/Shape-Wars
 
 Open a terminal run
 
-``` shell
+```shell
 git clone https://github.com/FearlessOne07/Shape-Wars.git
 cd Shape-Wars
 cmake -S . -B build

@@ -63,7 +63,6 @@ void Player::Shoot(const RenderContext &rendercontext) {
   Vector2 mousePosition = GetMousePosition();
   mousePosition = rendercontext.GetScreenToGame(mousePosition);
   mousePosition = GetScreenToWorld2D(mousePosition, rendercontext.camera);
-
   std::unique_ptr<Bullet> bullet =
       std::make_unique<PlayerBullet>(_position, 1000.f, _damage, mousePosition);
   _bulletSpawnCallback(bullet);

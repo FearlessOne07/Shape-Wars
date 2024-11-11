@@ -4,7 +4,11 @@
 #include "raylib.h"
 #include "raymath.h"
 
-Chaser::Chaser(EntitySpec entitySpec) : Entity(entitySpec) { _color = RED; }
+Chaser::Chaser(EntitySpec entitySpec) : Entity(entitySpec) {
+  _color = RED;
+  _targetRotation = 0.9;
+  _rotationAccelertionFactor = 0.5;
+}
 
 void Chaser::ChasePlayer() {
   Vector2 direction =
