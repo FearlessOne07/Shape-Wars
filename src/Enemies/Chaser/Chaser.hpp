@@ -6,9 +6,6 @@ class Player;
 class Chaser : public Entity {
 private:
   void ChasePlayer();
-  void UpdateMovement(float dt) override;
-  void Rotate(float dt) override;
-  void CheckActivity() override;
 
 public:
   Chaser(EntitySpec entitySpec);

@@ -5,14 +5,11 @@ class Shooter : public Entity {
 
 private:
   bool _hasPlanted = false;
+  float _plantDistance = 500.f;
 
 private:
-  void UpdateMovement(float dt) override;
-  void Rotate(float dt) override;
-  void CheckActivity() override;
-
   void ApproachPlayer(float dt);
-  void Shoot(float dt);
+  void Attack(float dt);
 
 public:
   void Update(float dt, const RenderContext &rendercontext) override;

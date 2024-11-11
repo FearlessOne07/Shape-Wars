@@ -3,6 +3,7 @@
 #include "BulletManager/PlayerBullet/PlayerBullet.hpp"
 #include "Core/Game/RenderContext.hpp"
 #include "Enemies/Chaser/Chaser.hpp"
+#include "Enemies/Shooter/Shooter.hpp"
 #include "EntityManager/EntitySpec.hpp"
 #include "Player/Player.hpp"
 #include "WaveSpawner/WaveSpawner.hpp"
@@ -107,8 +108,6 @@ void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt) {
   if (_entitiesToSpawn.size() > 0 &&
       _entitySpawnTimer >= _entitySpawnInterval) {
 
-    std::cout << "Spawing Enemies\n";
-    std::cout << "enemyToSpawn size: " << _entitiesToSpawn.size() << "\n";
     // Initialize the random device
     std::random_device rd;
     std::mt19937_64 gen(rd());
@@ -126,12 +125,14 @@ void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt) {
     int enemy = _entitiesToSpawn.back();
     EntitySpec spec = _entitySpecs[enemy];
     std::unique_ptr<Entity> enemyToSpawn;
+    spec.position = anchor;
     if (spec.name == "chaser") {
-      spec.position = anchor;
       enemyToSpawn = std::make_unique<Chaser>(spec);
-      enemyToSpawn->SetGetPlayerCallBack(
-          [this]() { return this->GetPlayer(); });
+    } else if (spec.name == "shooter") {
+      enemyToSpawn = std::make_unique<Shooter>(spec);
     }
+    std::cout << "Spawned " << spec.name << "\n";
+    enemyToSpawn->SetGetPlayerCallBack([this]() { return this->GetPlayer(); });
     AddEntity(enemyToSpawn);
     _entitiesToSpawn.pop_back();
     _entitySpawnTimer = 0;

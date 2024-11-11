@@ -2,6 +2,7 @@
 #include "Core/Game/RenderContext.hpp"
 #include "EntityManager/EntitySpec.hpp"
 #include "raylib.h"
+#include "raymath.h"
 #include <functional>
 #include <memory>
 class Bullet;
@@ -39,9 +40,31 @@ protected:
   std::function<const Player *()> _getPlayerCallBack;
 
 protected: // Methods
-  virtual void UpdateMovement(float dt) = 0;
-  virtual void Rotate(float dt) = 0;
-  virtual void CheckActivity() = 0;
+  void UpdateMovement(float dt) {
+    if (Vector2Length(_targetVelocity) > 0) {
+      _targetVelocity = Vector2Normalize(_targetVelocity);
+    }
+    _velocity = Vector2Lerp(_velocity, _targetVelocity, _acceleration * dt);
+    _position = Vector2Add(_position, Vector2Scale(_velocity, _speed * dt));
+  }
+
+  void CheckActivity() {
+    if (_healthPoints <= 0) {
+      _isAlve = false;
+    }
+  }
+
+  void Rotate(float dt) {
+    if (_targetRotation >= 0) {
+      _rotationVelocity = Lerp(_rotationVelocity, _targetRotation,
+                               _rotationAccelertionFactor * dt);
+    }
+    _rotation += (_rotationVelocity * _rotationSpeed) * dt;
+
+    if (_rotation > 360) {
+      _rotation = 0;
+    }
+  }
 
 public:
   // Core

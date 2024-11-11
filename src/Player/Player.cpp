@@ -58,15 +58,6 @@ void Player::GetInput(const RenderContext &rendercontext) {
   }
 }
 
-void Player::UpdateMovement(float dt) {
-
-  if (Vector2Length(_targetVelocity) > 0) {
-    _targetVelocity = Vector2Normalize(_targetVelocity);
-  }
-  _velocity = Vector2Lerp(_velocity, _targetVelocity, _acceleration * dt);
-  _position = Vector2Add(_position, Vector2Scale(_velocity, _speed * dt));
-}
-
 void Player::Shoot(const RenderContext &rendercontext) {
 
   Vector2 mousePosition = GetMousePosition();
@@ -81,24 +72,6 @@ void Player::Shoot(const RenderContext &rendercontext) {
 void Player::UpdateTimers(float dt) {
   if (_fireTimer < _fireRate)
     _fireTimer += dt;
-}
-
-void Player::Rotate(float dt) {
-  if (_targetRotation >= 0) {
-    _rotationVelocity = Lerp(_rotationVelocity, _targetRotation,
-                             _rotationAccelertionFactor * dt);
-  }
-  _rotation += (_rotationVelocity * _rotationSpeed) * dt;
-
-  if (_rotation > 360) {
-    _rotation = 0;
-  }
-}
-
-void Player::CheckActivity() {
-  if (_healthPoints <= 0) {
-    _isAlve = false;
-  }
 }
 
 void Player::Wrap(const RenderContext &rendercontext) {
