@@ -36,6 +36,7 @@ private:
   std::array<Vector2, 16> _spawnAnchors;
   bool _shiftedSpawnAnchors = false;
   Vector2 _lastSpawnAnchor;
+  float _lastCameraZoom = 0.f;
 
   // Entities
   std::vector<int> _entitiesToSpawn;
@@ -47,7 +48,6 @@ private:
 
 private: // Methods
   // Utitliy
-  bool ValidatePosition(Vector2 position);
   void LoadConfigs(const std::filesystem::path &path);
   EntitySpec SpecFromJson(const Json::Value &json);
   void AddEntity(std::unique_ptr<Entity> &entity);

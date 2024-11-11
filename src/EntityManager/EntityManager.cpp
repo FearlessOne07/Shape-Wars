@@ -7,7 +7,6 @@
 #include "Player/Player.hpp"
 #include "WaveSpawner/WaveSpawner.hpp"
 #include "raylib.h"
-#include "raymath.h"
 #include "json/reader.h"
 #include "json/value.h"
 #include "json/writer.h"
@@ -36,9 +35,11 @@ void EntityManager::Init() {
 
 void EntityManager::Update(float dt, const RenderContext &rendercontext) {
 
-  if (!_shiftedSpawnAnchors) {
+  if (!_shiftedSpawnAnchors || rendercontext.camera.zoom != _lastCameraZoom) {
     GenerateSpawnAnchors(4, rendercontext);
     _shiftedSpawnAnchors = true;
+    _lastCameraZoom = rendercontext.camera.zoom;
+    std::cout << "Shifted spawn anchor\n";
   }
 
   // Check if there are any enemies to spawn and spawn them
@@ -226,15 +227,6 @@ EntitySpec EntityManager::SpecFromJson(const Json::Value &json) {
     return spec;
   }
   return {};
-}
-
-bool EntityManager::ValidatePosition(Vector2 position) {
-  for (auto &e : _entities) {
-    if (Vector2Distance(position, e->GetPosition()) < 100) {
-      return false;
-    }
-  }
-  return true;
 }
 
 void EntityManager::GenerateSpawnAnchors(int countPerSide,
