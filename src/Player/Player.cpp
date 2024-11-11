@@ -70,11 +70,7 @@ void Player::UpdateMovement(float dt) {
 void Player::Shoot(const RenderContext &rendercontext) {
 
   Vector2 mousePosition = GetMousePosition();
-  mousePosition.x =
-      (mousePosition.x - rendercontext.marginX) / rendercontext.scale;
-  mousePosition.y =
-      (mousePosition.y - rendercontext.marginY) / rendercontext.scale;
-
+  mousePosition = rendercontext.GetScreenToGame(mousePosition);
   mousePosition = GetScreenToWorld2D(mousePosition, rendercontext.camera);
 
   std::unique_ptr<Bullet> bullet =

@@ -8,4 +8,10 @@ struct RenderContext {
   float marginY;
   float scale;
   mutable Camera2D camera;
+
+  Vector2 GetScreenToGame(Vector2 vec) const {
+    vec.x = (vec.x - marginX) / scale;
+    vec.y = (vec.y - marginY) / scale;
+    return vec;
+  }
 };

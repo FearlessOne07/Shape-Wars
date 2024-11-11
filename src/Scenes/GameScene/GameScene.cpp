@@ -26,7 +26,7 @@ void GameScene::Enter() {
       });
 
   _entityManager.SpawnPlayer();
-  _camera.zoom = 1.f;
+  _camera.zoom = 0.6f;
   _camera.offset = {0, 0};
   _camera.target = {0, 0};
 

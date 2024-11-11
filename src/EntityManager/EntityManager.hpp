@@ -6,6 +6,7 @@
 #include "WaveSpawner/WaveSpawner.hpp"
 #include "raylib.h"
 #include "json/value.h"
+#include <array>
 #include <filesystem>
 #include <functional>
 #include <memory>
@@ -15,10 +16,11 @@ class EntityManager {
 
   using GetBulletsCallBack =
       std::function<const std::vector<std::unique_ptr<Bullet>> &()>;
+  using SpawnBulletCallBack = std::function<void(std::unique_ptr<Bullet> &)>;
 
 private:
   std::vector<std::unique_ptr<Entity>> _entities = {};
-  std::function<void(std::unique_ptr<Bullet> &)> _bulletSpawnCallback;
+  SpawnBulletCallBack _bulletSpawnCallback;
   GetBulletsCallBack _getBulletsCallback;
   std::unique_ptr<Entity> _player;
   EntitySpec _playerSpec = {};
@@ -31,6 +33,11 @@ private:
   WaveSpawner _waveSpawner = {};
 
   // Spawning
+  std::array<Vector2, 16> _spawnAnchors;
+  bool _shiftedSpawnAnchors = false;
+  Vector2 _lastSpawnAnchor;
+
+  // Entities
   std::vector<int> _entitiesToSpawn;
   float _entitySpawnInterval = 5;
   float _entitySpawnTimer = _entitySpawnInterval;
@@ -49,6 +56,8 @@ private: // Methods
   void CheckBulletCollisions();
   void RemoveDeadEntities();
   void CheckPlayerCollisions();
+  void GenerateSpawnAnchors(int countPerSide,
+                            const RenderContext &rendercontext);
 
   // Entities
   void SpawnWave(const RenderContext &rendercontext, float dt);
@@ -61,8 +70,7 @@ public:
   void Reset();
 
   // Callbacks
-  void SetBulletSpawnCallBack(
-      std::function<void(std::unique_ptr<Bullet> &)> bulletSpawnCallback);
+  void SetBulletSpawnCallBack(SpawnBulletCallBack bulletSpawnCallback);
   void SetGetBulletsCallBack(GetBulletsCallBack callback);
   void SpawnPlayer();
 
