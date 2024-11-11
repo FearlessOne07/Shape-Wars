@@ -23,7 +23,11 @@
 #include <vector>
 
 void EntityManager::Init() {
+
+  // Load the eneity json configs
   LoadConfigs("config/entities");
+
+  // Initialize entity vector
   _entities = std::vector<std::unique_ptr<Entity>>();
   _entities.reserve(50);
   _bulletSpawnCallback = nullptr;
@@ -36,9 +40,9 @@ void EntityManager::Init() {
 
 void EntityManager::Update(float dt, const RenderContext &rendercontext) {
 
-  if (!_shiftedSpawnAnchors || rendercontext.camera.zoom != _lastCameraZoom) {
+  // Update and translate spawn anchors if camera zoom changes
+  if (rendercontext.camera.zoom != _lastCameraZoom) {
     GenerateSpawnAnchors(4, rendercontext);
-    _shiftedSpawnAnchors = true;
     _lastCameraZoom = rendercontext.camera.zoom;
     std::cout << "Shifted spawn anchor\n";
   }
@@ -61,29 +65,35 @@ void EntityManager::Update(float dt, const RenderContext &rendercontext) {
 }
 
 void EntityManager::Render() {
+  // Render player
   _player->Render();
+
+  // Render enemies
   for (auto &e : _entities) {
     e->Render();
-  }
-
-  for (Vector2 &v : _spawnAnchors) {
-    DrawCircleV(v, 5, RED);
   }
 }
 
 void EntityManager::AddEntity(std::unique_ptr<Entity> &entity) {
+  // Check if the entity can shoot
   if (entity->CanShoot()) {
     entity->SetBulletSpawnCallback(_bulletSpawnCallback);
   }
 
+  // Set the get player call back
   entity->SetGetPlayerCallBack([this]() { return this->GetPlayer(); });
+
+  // Add the entity
   _entities.emplace_back(std::move(entity));
 }
 
 void EntityManager::SpawnPlayer() {
   if (!_player && _bulletSpawnCallback) {
+    // Get player spec
     EntitySpec spec = _playerSpec;
     spec.position = {0};
+
+    // Spawn the player
     _player = std::make_unique<Player>(spec);
     _player->SetBulletSpawnCallback(_bulletSpawnCallback);
   } else {
@@ -98,13 +108,19 @@ void EntityManager::Reset() {
 
 void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt) {
 
+  // Check if there are no enemies and a certain time has passed then spawn
+  // wave
   if (_entities.size() == 0 && _timeSinceLastWave > _waveInterval) {
+
+    // Get wave contenst from wave spawner
     _entitiesToSpawn = _waveSpawner.SpawnWave(_entitySpecs);
     _timeSinceLastWave = 0;
   } else {
     _timeSinceLastWave += dt;
   }
 
+  // Check if there are enemies to spawn and a certain time has passed after the
+  // last enemy
   if (_entitiesToSpawn.size() > 0 &&
       _entitySpawnTimer >= _entitySpawnInterval) {
 
@@ -112,27 +128,41 @@ void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt) {
     std::random_device rd;
     std::mt19937_64 gen(rd());
 
+    // Select a ranomd spawn anchor
     Vector2 anchor = {0, 0};
     std::uniform_int_distribution<int> anchorDist(0, _spawnAnchors.size() - 1);
 
+    // Select a new anchor if the one chosen is the same as the last chiesen one
+    // up to a maximum of five times
     for (int i = 0; i < 5 && (anchor.x == _lastSpawnAnchor.x &&
                               anchor.y == _lastSpawnAnchor.y);
          i++) {
       anchor = _spawnAnchors[anchorDist(gen)];
     }
+
+    // Update the last chosen spawn acnhor
     Vector2 _lastSpawnAnchor = anchor;
 
+    // Get the last enemy in the vector to spawn
     int enemy = _entitiesToSpawn.back();
+
+    // Get it's spec
     EntitySpec spec = _entitySpecs[enemy];
     std::unique_ptr<Entity> enemyToSpawn;
+
+    // set its start posiiton to the acnhor chisen
     spec.position = anchor;
+
+    // Push construct an eneity based on the chosen spec
     if (spec.name == "chaser") {
       enemyToSpawn = std::make_unique<Chaser>(spec);
     } else if (spec.name == "shooter") {
       enemyToSpawn = std::make_unique<Shooter>(spec);
     }
+
     std::cout << "Spawned " << spec.name << "\n";
-    enemyToSpawn->SetGetPlayerCallBack([this]() { return this->GetPlayer(); });
+
+    //
     AddEntity(enemyToSpawn);
     _entitiesToSpawn.pop_back();
     _entitySpawnTimer = 0;
@@ -284,8 +314,6 @@ void EntityManager::SetBulletSpawnCallBack(
 int EntityManager::GetAliveCount() const { return _entities.size(); }
 
 const Player *EntityManager::GetPlayer() const {
-  if (_player) {
-    return static_cast<Player *>(_player.get());
-  }
-  return nullptr;
+  assert(_player);
+  return static_cast<Player *>(_player.get());
 }

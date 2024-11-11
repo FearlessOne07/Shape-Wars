@@ -7,7 +7,11 @@
 #include "raymath.h"
 #include <memory>
 
-Shooter::Shooter(EntitySpec entitySpec) : Entity(entitySpec) { _color = GREEN; }
+Shooter::Shooter(EntitySpec entitySpec) : Entity(entitySpec) {
+  _color = GREEN;
+  _targetRotation = 0.4f;
+  _rotationAccelertionFactor = 0.7;
+}
 
 // Overrides
 void Shooter::Update(float dt, const RenderContext &renderContext) {
@@ -18,6 +22,7 @@ void Shooter::Update(float dt, const RenderContext &renderContext) {
   }
   UpdateMovement(dt);
   CheckActivity();
+  Rotate(dt);
 }
 void Shooter::Render() {
   DrawPolyLinesEx(_position, 5, _radius, _rotation, 5, _color);
@@ -26,8 +31,7 @@ void Shooter::Render() {
 // Core
 void Shooter::Attack(float dt) {
   _fireTimer += dt;
-  _targetRotation = 2;
-
+  _targetRotation = 1;
   if (_fireTimer >= _fireRate) {
     std::unique_ptr<Bullet> bullet = std::make_unique<PlayerBullet>(
         _position, 1000.f, _damage, _getPlayerCallBack()->GetPosition());
@@ -39,7 +43,6 @@ void Shooter::Attack(float dt) {
 void Shooter::ApproachPlayer(float dt) {
   Vector2 playerPosition = _getPlayerCallBack()->GetPosition();
   _targetVelocity = Vector2Subtract(playerPosition, _position);
-  _targetVelocity = Vector2Normalize(_targetVelocity);
   float distanceFromPlayer =
       Vector2Distance(_position, _getPlayerCallBack()->GetPosition());
 
