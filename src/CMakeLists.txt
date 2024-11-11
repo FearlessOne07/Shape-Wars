@@ -31,3 +31,9 @@ target_link_libraries(${PROJECT_NAME}
   raylib
   jsoncpp
 )
+
+if(MSVC)
+  set_target_properties("${PROJECT_NAME}" PROPERTIES
+        VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    )
+endif()
