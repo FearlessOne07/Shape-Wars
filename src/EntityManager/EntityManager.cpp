@@ -36,30 +36,37 @@ void EntityManager::Init() {
 
 void EntityManager::Update(float dt, const RenderContext &rendercontext) {
 
-  SpawnWave(rendercontext, dt);
-  if (_player && _player->IsAlive()) {
-    _player->Update(dt, rendercontext);
+  if (!_shiftedSpawnAnchors) {
+    GenerateSpawnAnchors(4, rendercontext);
+    _shiftedSpawnAnchors = true;
   }
+
+  // Check if there are any enemies to spawn and spawn them
+  SpawnWave(rendercontext, dt);
+
+  // Update player
+  _player->Update(dt, rendercontext);
   CheckPlayerCollisions();
 
+  // Update enemies
   for (auto &e : _entities) {
     e->Update(dt, rendercontext);
   }
   CheckBulletCollisions();
+
+  // Clean up dead enemies
   RemoveDeadEntities();
 }
 
 void EntityManager::Render() {
-
   _player->Render();
   for (auto &e : _entities) {
     e->Render();
   }
-}
 
-void EntityManager::SetBulletSpawnCallBack(
-    std::function<void(std::unique_ptr<Bullet> &)> bulletSpawnCallback) {
-  _bulletSpawnCallback = bulletSpawnCallback;
+  for (Vector2 &v : _spawnAnchors) {
+    DrawCircleV(v, 5, RED);
+  }
 }
 
 void EntityManager::AddEntity(std::unique_ptr<Entity> &entity) {
@@ -105,38 +112,21 @@ void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt) {
     std::random_device rd;
     std::mt19937_64 gen(rd());
 
-    // Define angle Distributions
-    std::uniform_real_distribution<float> angleDist(0, 2 * PI);
+    Vector2 anchor = {0, 0};
+    std::uniform_int_distribution<int> anchorDist(0, _spawnAnchors.size() - 1);
 
-    // Define radius Distributions
-    std::uniform_real_distribution<float> radiusDist(0.2f, 1.f);
-
-    Vector2 min = {0, 0};
-    Vector2 max = {GetScreenWidth() / 2.f, GetScreenHeight() / 2.f};
-
-    // Define angle variables
-    bool validPosition = false;
-    float angle = angleDist(gen);
-    float radius = Vector2Distance(min, max);
-
-    // Generete Postion
-    float positionX = sin(angle) * radius;
-    float positionY = cos(angle) * radius;
-    validPosition = ValidatePosition(Vector2{positionX, positionY});
-
-    // Validate and regenerate position if not valid
-    for (int a = 0; a < 10 && !validPosition; a++) {
-      angle = angleDist(gen);
-      positionX = sin(angle) * radius;
-      positionY = cos(angle) * radius;
-      validPosition = ValidatePosition(Vector2{positionX, positionY});
+    for (int i = 0; i < 5 && (anchor.x == _lastSpawnAnchor.x &&
+                              anchor.y == _lastSpawnAnchor.y);
+         i++) {
+      anchor = _spawnAnchors[anchorDist(gen)];
     }
+    Vector2 _lastSpawnAnchor = anchor;
 
     int enemy = _entitiesToSpawn.back();
     EntitySpec spec = _entitySpecs[enemy];
     std::unique_ptr<Entity> enemyToSpawn;
     if (spec.name == "chaser") {
-      spec.position = {positionX, positionY};
+      spec.position = anchor;
       enemyToSpawn = std::make_unique<Chaser>(spec);
       enemyToSpawn->SetGetPlayerCallBack(
           [this]() { return this->GetPlayer(); });
@@ -147,15 +137,6 @@ void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt) {
   } else {
     _entitySpawnTimer += dt;
   }
-}
-
-bool EntityManager::ValidatePosition(Vector2 position) {
-  for (auto &e : _entities) {
-    if (Vector2Distance(position, e->GetPosition()) < 100) {
-      return false;
-    }
-  }
-  return true;
 }
 
 void EntityManager::CheckBulletCollisions() {
@@ -200,10 +181,7 @@ void EntityManager::CheckPlayerCollisions() {
   }
 }
 
-void EntityManager::SetGetBulletsCallBack(GetBulletsCallBack callBack) {
-  _getBulletsCallback = callBack;
-}
-
+// Utitlity functions
 void EntityManager::LoadConfigs(const std::filesystem::path &path) {
   Json::Reader reader;
 
@@ -250,11 +228,71 @@ EntitySpec EntityManager::SpecFromJson(const Json::Value &json) {
   return {};
 }
 
+bool EntityManager::ValidatePosition(Vector2 position) {
+  for (auto &e : _entities) {
+    if (Vector2Distance(position, e->GetPosition()) < 100) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void EntityManager::GenerateSpawnAnchors(int countPerSide,
+                                         const RenderContext &rendercontext) {
+
+  float offset = 50.f;
+  int currentAnchor = 0;
+
+  // Right hand side
+  float distanceV = rendercontext.gameHeight / (float)(countPerSide - 1);
+  float distanceH = rendercontext.gameWidth / ((float)countPerSide - 1);
+
+  for (int i = 0; i < countPerSide; i++) {
+    Vector2 anchor = {rendercontext.gameWidth + offset, (distanceV * i)};
+    _spawnAnchors[currentAnchor++] = anchor;
+  }
+
+  // For Left
+  for (int i = 0; i < countPerSide; i++) {
+    Vector2 anchor = {-offset, (distanceV * i)};
+    _spawnAnchors[currentAnchor++] = anchor;
+  }
+
+  // For Bottom
+  for (int i = 0; i < countPerSide; i++) {
+    Vector2 anchor = {(distanceH * i), rendercontext.gameHeight + offset};
+    _spawnAnchors[currentAnchor++] = anchor;
+  }
+  // For Top
+  for (int i = 0; i < countPerSide; i++) {
+    Vector2 anchor = {(distanceH * i), -offset};
+    _spawnAnchors[currentAnchor++] = anchor;
+  }
+
+  for (Vector2 &v : _spawnAnchors) {
+    v.x = v.x - ((rendercontext.gameWidth) / 2);
+    v.y = v.y - ((rendercontext.gameHeight) / 2);
+
+    v.x = v.x / rendercontext.camera.zoom;
+    v.y = v.y / rendercontext.camera.zoom;
+  }
+}
+
+// Call Backs
+void EntityManager::SetGetBulletsCallBack(GetBulletsCallBack callBack) {
+  _getBulletsCallback = callBack;
+}
+void EntityManager::SetBulletSpawnCallBack(
+    SpawnBulletCallBack bulletSpawnCallback) {
+  _bulletSpawnCallback = bulletSpawnCallback;
+}
+
+// Access And Mutation
+int EntityManager::GetAliveCount() const { return _entities.size(); }
+
 const Player *EntityManager::GetPlayer() const {
   if (_player) {
     return static_cast<Player *>(_player.get());
   }
   return nullptr;
 }
-
-int EntityManager::GetAliveCount() const { return _entities.size(); }
