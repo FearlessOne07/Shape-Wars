@@ -1,0 +1,13 @@
+{
+  "name": "shooter",
+  "radius": 30,
+  "speed": 100,
+  "acceleration": 2,
+  "rotation-speed": 100,
+  "health-points": 5,
+  "can-shoot": false,
+  "fire-rate": 0,
+  "damage": 2,
+  "cost": 3,
+  "can-clump": false
+}
