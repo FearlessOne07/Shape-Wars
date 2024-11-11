@@ -5,7 +5,6 @@
 
 std::vector<int> &
 WaveSpawner::SpawnWave(const std::unordered_map<int, EntitySpec> &specs) {
-
   _enemiesToSpawn.clear();
   _enemiesToSpawn.reserve(10);
   GenerateWave(specs);
@@ -27,13 +26,13 @@ void WaveSpawner::GenerateWave(
 
   std::random_device rd;
   std::mt19937_64 gen(rd());
-  std::uniform_int_distribution<int> poolDist(0, pool.size() - 1);
 
   while (_wavePoints > 0) {
-    int enemyType = poolDist(gen);
+    std::uniform_int_distribution<int> poolDist(0, pool.size() - 1);
+    int indexToPush = poolDist(gen);
+    int enemyType = pool[indexToPush];
     if (specs.at(enemyType).cost <= _wavePoints) {
       _wavePoints -= specs.at(enemyType).cost;
-      pool.erase(pool.begin() + enemyType);
       _enemiesToSpawn.push_back(enemyType);
     }
   }

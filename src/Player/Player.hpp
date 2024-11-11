@@ -6,11 +6,8 @@
 class Player : public Entity {
 private:
   void GetInput(const RenderContext &rendercontext);
-  void UpdateMovement(float dt) override;
   void Shoot(const RenderContext &rendercontext);
   void UpdateTimers(float dt);
-  void Rotate(float dt) override;
-  void CheckActivity() override;
   void Wrap(const RenderContext &rendercontext);
 
 public:

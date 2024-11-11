@@ -9,8 +9,9 @@ target_sources("${PROJECT_NAME}"    # No quotes around "main"
   "./BulletManager/BulletManager.cpp"
   "./EntityManager/EntityManager.cpp"
   "./BulletManager/PlayerBullet/PlayerBullet.cpp"
-  "./Enemies/Chaser/Chaser.cpp"
   "./WaveSpawner/WaveSpawner.cpp"
+  "./Enemies/Chaser/Chaser.cpp"
+  "./Enemies/Shooter/Shooter.cpp"
 )
 
 target_include_directories("${PROJECT_NAME}"
