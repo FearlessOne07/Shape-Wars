@@ -3,18 +3,18 @@
 ## What?
 
 This is a game project I've been working on for about 2 months as I
-have been learing C++. It uses raylib for gpraphics and jsoncpp for
+have been learning C++. It uses raylib for graphics and jsoncpp for
 JSON related manipulaiton. I will continue working on it until it either
 becomes something great or it flops hard. If you happen across this repo,
-enjoy? I guess?
+enjoy, I guess?
 
 ## Building
 
 ### Linux
 
-Run the follwing command
+Run the following command
 
-```shell
+``` shell
 git clone https://github.com/FearlessOne07/Shape-Wars.git
 cd Shape-Wars
 cmake -S . -B build
@@ -26,7 +26,7 @@ bin/Shape-Wars
 
 Open a terminal run
 
-```shell
+``` shell
 git clone https://github.com/FearlessOne07/Shape-Wars.git
 cd Shape-Wars
 cmake -S . -B build
