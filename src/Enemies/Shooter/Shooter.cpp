@@ -34,7 +34,7 @@ void Shooter::Attack(float dt) {
   _fireTimer += dt;
   if (_fireTimer >= _fireRate) {
     std::unique_ptr<Bullet> bullet = std::make_unique<GenericBullet>(
-        _position, 1000.f, _damage, _getPlayerCallBack()->GetPosition(), this);
+        _position, 500.f, _damage, _getPlayerCallBack()->GetPosition(), this);
     _bulletSpawnCallback(bullet);
     _fireTimer = 0.f;
   }

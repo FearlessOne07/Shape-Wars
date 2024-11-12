@@ -9,11 +9,12 @@ protected:
   Vector2 _velocity = {0.f};
   float _speed = 0.f;
   float _radius = 0.f;
-  const Entity *_source;
 
   float _damage = 0.f;
 
   bool _isAlive = true;
+
+  const Entity *_source;
 
 public:
   Bullet(Vector2 position, float speed, float damage, const Entity *source)

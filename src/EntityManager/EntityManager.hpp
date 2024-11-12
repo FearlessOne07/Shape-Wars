@@ -41,10 +41,10 @@ private:
   // Entities
   std::vector<int> _entitiesToSpawn;
   float _entitySpawnInterval = 5;
-  float _entitySpawnTimer = _entitySpawnInterval;
+  float _entitySpawnTimer = 0.f;
 
   float _waveInterval = 5;
-  float _timeSinceLastWave = _waveInterval;
+  float _timeSinceLastWave = 0.f;
 
 private: // Methods
   // Utitliy
