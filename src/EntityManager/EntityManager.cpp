@@ -26,6 +26,7 @@ void EntityManager::Init() {
 
   // Load the eneity json configs
   LoadConfigs("config/entities");
+  Fade(RED, 0.4);
 
   // Initialize entity vector
   _entities = std::vector<std::unique_ptr<Entity>>();
@@ -185,6 +186,15 @@ void EntityManager::CheckBulletCollisions() {
           e->SetHp(e->GetHp() - playerBullet->GetDamage());
           playerBullet->SetIsAlive(false);
         }
+      }
+    } else if ((playerBullet = dynamic_cast<GenericBullet *>(b.get())) &&
+               b->GetSource() != _player.get()) {
+
+      if (CheckCollisionCircles(_player->GetPosition(), _player->GetRadius(),
+                                b->GetPosition(), b->GetRadius()) &&
+          _player->IsAlive()) {
+        _player->SetHp(_player->GetHp() - b->GetDamage());
+        b->SetIsAlive(false);
       }
     }
   }

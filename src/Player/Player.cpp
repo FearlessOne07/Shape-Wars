@@ -4,7 +4,6 @@
 #include "EntityManager/Entity.hpp"
 #include "EntityManager/EntitySpec.hpp"
 #include "raylib.h"
-#include "raymath.h"
 
 Player::Player(EntitySpec entitySpec) : Entity(entitySpec) {
 
