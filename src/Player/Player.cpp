@@ -1,5 +1,5 @@
 #include "Player.hpp"
-#include "BulletManager/PlayerBullet/PlayerBullet.hpp"
+#include "BulletManager/GenericBullet/GenericBullet.hpp"
 #include "Core/Game/RenderContext.hpp"
 #include "EntityManager/Entity.hpp"
 #include "EntityManager/EntitySpec.hpp"
@@ -63,8 +63,8 @@ void Player::Shoot(const RenderContext &rendercontext) {
   Vector2 mousePosition = GetMousePosition();
   mousePosition = rendercontext.GetScreenToGame(mousePosition);
   mousePosition = GetScreenToWorld2D(mousePosition, rendercontext.camera);
-  std::unique_ptr<Bullet> bullet =
-      std::make_unique<PlayerBullet>(_position, 1000.f, _damage, mousePosition);
+  std::unique_ptr<Bullet> bullet = std::make_unique<GenericBullet>(
+      _position, 1000.f, _damage, mousePosition, this);
   _bulletSpawnCallback(bullet);
 }
 

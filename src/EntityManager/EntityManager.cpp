@@ -1,6 +1,6 @@
 #include "EntityManager/EntityManager.hpp"
 #include "BulletManager/Bullet.hpp"
-#include "BulletManager/PlayerBullet/PlayerBullet.hpp"
+#include "BulletManager/GenericBullet/GenericBullet.hpp"
 #include "Core/Game/RenderContext.hpp"
 #include "Enemies/Chaser/Chaser.hpp"
 #include "Enemies/Shooter/Shooter.hpp"
@@ -173,8 +173,9 @@ void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt) {
 
 void EntityManager::CheckBulletCollisions() {
   for (auto &b : _getBulletsCallback()) {
-    PlayerBullet *playerBullet = nullptr;
-    if ((playerBullet = dynamic_cast<PlayerBullet *>(b.get()))) {
+    GenericBullet *playerBullet = nullptr;
+    if ((playerBullet = dynamic_cast<GenericBullet *>(b.get())) &&
+        b->GetSource() == _player.get()) {
       for (auto &e : _entities) {
         Vector2 playerBulletPos = playerBullet->GetPosition();
         float playerBulletRad = playerBullet->GetRadius();

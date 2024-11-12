@@ -19,7 +19,7 @@ protected:
   bool _canShoot = false;
   float _damage = 0.f;
 
-  float _fireRate = 0, f;
+  float _fireRate = 0.f;
   Vector2 _velocity = {0.f};
   Vector2 _targetVelocity = {0.f};
   Vector2 _position = {0.f};

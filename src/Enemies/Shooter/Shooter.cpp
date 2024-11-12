@@ -1,5 +1,5 @@
 #include "Shooter.hpp"
-#include "BulletManager/PlayerBullet/PlayerBullet.hpp"
+#include "BulletManager/GenericBullet/GenericBullet.hpp"
 #include "Core/Game/RenderContext.hpp"
 #include "EntityManager/Entity.hpp"
 #include "Player/Player.hpp"
@@ -11,6 +11,7 @@ Shooter::Shooter(EntitySpec entitySpec) : Entity(entitySpec) {
   _color = GREEN;
   _targetRotation = 0.4f;
   _rotationAccelertionFactor = 0.7;
+  _fireTimer = 0;
 }
 
 // Overrides
@@ -31,10 +32,9 @@ void Shooter::Render() {
 // Core
 void Shooter::Attack(float dt) {
   _fireTimer += dt;
-  _targetRotation = 1;
   if (_fireTimer >= _fireRate) {
-    std::unique_ptr<Bullet> bullet = std::make_unique<PlayerBullet>(
-        _position, 1000.f, _damage, _getPlayerCallBack()->GetPosition());
+    std::unique_ptr<Bullet> bullet = std::make_unique<GenericBullet>(
+        _position, 1000.f, _damage, _getPlayerCallBack()->GetPosition(), this);
     _bulletSpawnCallback(bullet);
     _fireTimer = 0.f;
   }

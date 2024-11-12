@@ -11,12 +11,13 @@ WaveSpawner::SpawnWave(const std::unordered_map<int, EntitySpec> &specs) {
   return _enemiesToSpawn;
 }
 
+// TODO: Refine spawing mechanic
 void WaveSpawner::GenerateWave(
     const std::unordered_map<int, EntitySpec> &specs) {
 
   assert(!specs.empty());
   _waveCount++;
-  _wavePoints = 10 * _waveCount;
+  _wavePoints = 5 * _waveCount;
 
   std::vector<int> pool = {};
 
