@@ -6,13 +6,13 @@ This is a game project I've been working on for about 2 months as I
 have been learning C++. It uses raylib for graphics and jsoncpp for
 JSON related manipulaiton. I will continue working on it until it either
 becomes something great or it flops hard. If you happen across this repo,
-enjoy, I guess?
+enjoy.
 
 ## Building
 
 ### Linux
 
-Run the following command
+Run the following commands
 
 ```shell
 git clone https://github.com/FearlessOne07/Shape-Wars.git
@@ -24,7 +24,7 @@ bin/Shape-Wars
 
 ### Windows with Visual Studio
 
-Open a terminal run
+Open a terminal and run
 
 ```shell
 git clone https://github.com/FearlessOne07/Shape-Wars.git
@@ -32,5 +32,5 @@ cd Shape-Wars
 cmake -S . -B build
 ```
 
-Navigate to the build folder in the cloned directory and open the Shape-wars
+Navigate to the build folder in the cloned directory and open the Shape-Wars
 solution file

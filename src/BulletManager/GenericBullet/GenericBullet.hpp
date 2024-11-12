@@ -1,20 +1,21 @@
 #pragma once
 #include "BulletManager/Bullet.hpp"
 #include "Core/Game/RenderContext.hpp"
+#include "EntityManager/Entity.hpp"
 #include "raylib.h"
 
-class PlayerBullet : public Bullet {
+class GenericBullet : public Bullet {
 private:
   Vector2 _target = {0.f};
 
 private: // Methods
   void UpdateMovment(float dt);
-  void CheckActivity(const RenderContext &renderContext);
 
 public:
-  PlayerBullet();
+  GenericBullet();
 
-  PlayerBullet(Vector2 position, float speed, float damage, Vector2 target);
+  GenericBullet(Vector2 position, float speed, float damage, Vector2 target,
+                const Entity *source);
   void Update(float dt, const RenderContext &renderContext) override;
   void Render() override;
 };
