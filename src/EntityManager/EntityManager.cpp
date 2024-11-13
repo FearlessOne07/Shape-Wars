@@ -104,6 +104,7 @@ void EntityManager::SpawnPlayer() {
 
 void EntityManager::Reset() {
   _entities.clear();
+  _waveSpawner.Reset();
   _player = nullptr;
 }
 
@@ -260,6 +261,8 @@ EntitySpec EntityManager::SpecFromJson(const Json::Value &json) {
     spec.canShoot = json["can-shoot"].asBool();
     spec.fireRate = json["fire-rate"].asFloat();
     spec.damage = json["damage"].asFloat();
+    spec.tier = json["tier"].asInt();
+    spec.unlockWave = json["unlock-wave"].asInt();
     spec.position = {0, 0};
 
     // Not Read By entity

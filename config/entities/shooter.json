@@ -9,5 +9,7 @@
   "fire-rate": 3,
   "damage": 2,
   "cost": 5,
-  "can-clump": false
+  "can-clump": false,
+  "unlock-wave": 3,
+  "tier": 0
 }
