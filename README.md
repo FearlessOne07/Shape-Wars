@@ -4,7 +4,8 @@
 
 This is a game project I'm working on for about 2 months as I
 have been learning C++. It uses raylib for graphics and jsoncpp for
-JSON related manipulaiton, and is inspired by the game Window Kill on steam.
+JSON related manipulaiton, and is inspired by the game Window Kill on steam
+(Not the mutli-window mechanic tho, that'd be cool).
 I will continue working on it until it either
 becomes something great or it flops hard. If you happen across this repo,
 enjoy.
