@@ -9,7 +9,7 @@
 
 Shooter::Shooter(EntitySpec entitySpec) : Entity(entitySpec) {
   _color = GREEN;
-  _targetRotation = 0.4f;
+  _targetRotation = 0.5f;
   _rotationAccelertionFactor = 0.7;
   _fireTimer = 0;
 }
@@ -32,6 +32,7 @@ void Shooter::Render() {
 // Core
 void Shooter::Attack(float dt) {
   _fireTimer += dt;
+  _targetRotation = 1;
   if (_fireTimer >= _fireRate) {
     std::unique_ptr<Bullet> bullet = std::make_unique<GenericBullet>(
         _position, 500.f, _damage, _getPlayerCallBack()->GetPosition(), this);
