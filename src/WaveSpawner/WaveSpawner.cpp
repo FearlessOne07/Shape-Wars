@@ -18,6 +18,7 @@ WaveSpawner::SpawnWave(const std::unordered_map<int, EntitySpec> &specs) {
 }
 
 // TODO: Refine spawing mechanic
+// TODO 2: REALLY FIX THIS SPAWING SYSTEM
 void WaveSpawner::GenerateWave(
     const std::unordered_map<int, EntitySpec> &specs) {
 

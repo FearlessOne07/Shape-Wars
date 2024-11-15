@@ -26,7 +26,6 @@ void EntityManager::Init() {
 
   // Load the eneity json configs
   LoadConfigs("config/entities");
-  Fade(RED, 0.4);
 
   // Initialize entity vector
   _entities = std::vector<std::unique_ptr<Entity>>();
@@ -112,7 +111,8 @@ void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt) {
 
   // Check if there are no enemies and a certain time has passed then spawn
   // wave
-  if (_entities.size() == 0 && _timeSinceLastWave > _waveInterval) {
+  if (_entitiesToSpawn.size() == 0 && _timeSinceLastWave > _waveInterval &&
+      _entities.size() == 0) {
 
     // Get wave contenst from wave spawner
     _entitiesToSpawn = _waveSpawner.SpawnWave(_entitySpecs);
@@ -300,6 +300,7 @@ void EntityManager::GenerateSpawnAnchors(int countPerSide,
     Vector2 anchor = {(distanceH * i), rendercontext.gameHeight + offset};
     _spawnAnchors[currentAnchor++] = anchor;
   }
+
   // For Top
   for (int i = 0; i < countPerSide; i++) {
     Vector2 anchor = {(distanceH * i), -offset};

@@ -107,7 +107,14 @@ public:
   bool IsAlive() const { return _isAlve; }
 
   int GetHp() const { return _healthPoints; }
-  void SetHp(int newHp) { _healthPoints = newHp; }
+  void SetHp(int newHp) {
+
+    if (newHp <= 0) {
+      _healthPoints = 0;
+    } else {
+      _healthPoints = newHp;
+    }
+  }
 
   float GetDamage() const { return _damage; }
 };

@@ -26,6 +26,7 @@ void GameScene::Enter() {
       [this]() -> const std::vector<std::unique_ptr<Bullet>> & {
         return this->_bulletManager.GetBullets();
       });
+
   // Spawn the player
   _entityManager.SpawnPlayer();
 
