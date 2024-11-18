@@ -1,7 +1,6 @@
 #include "Game.hpp"
 #include "RenderContext.hpp"
 #include "Scenes/GameScene/GameScene.hpp"
-#include "Scenes/SceneID.hpp"
 #include "raylib.h"
 #include <algorithm>
 
@@ -26,13 +25,9 @@ void Game::Init(int width, int height, const char *title, int fps) {
   // Init Systems
   _scenemanager = SceneManager();
   _scenemanager.SetQuitCallBack([this]() { this->Quit(); });
-  _scenemanager.RegisterSceneFactory(
-      static_cast<int>(SceneID::GAME_SCENE),
-      []() { return std::make_unique<GameScene>(); });
 }
 
 void Game::Run() {
-
   while (!WindowShouldClose() && _running) {
 
     // Get Input that affects whole game
@@ -83,3 +78,6 @@ void Game::End() {
 }
 
 void Game::Quit() { _running = false; }
+void Game::RegisterScene(int sceneID, FactoryCallBack factory) {
+  _scenemanager.RegisterScene(sceneID, std::move(factory));
+}
