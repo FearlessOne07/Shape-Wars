@@ -1,6 +1,7 @@
 #include "SceneManager.hpp"
 #include "Core/SceneManager/SceneTransition.hpp"
 #include <iostream>
+#include <stdexcept>
 #include <utility>
 
 void SceneManager::PushScene(int scene, SceneData sceneData) {
@@ -46,7 +47,6 @@ void SceneManager::SetQuitCallBack(QuitCallBack quitCallBack) {
 
 void SceneManager::Update(float dt, const RenderContext &rendercontext) {
   if (!_scenes.empty()) {
-
     // Update Current Scene
     _scenes.top()->Update(dt, rendercontext);
 
@@ -69,6 +69,8 @@ void SceneManager::Update(float dt, const RenderContext &rendercontext) {
         PopScene();
       }
     }
+  } else {
+    throw std::runtime_error("No valid scene in scene stack");
   }
 }
 
@@ -80,7 +82,7 @@ void SceneManager::Render() {
   }
 }
 
-void SceneManager::RegisterSceneFactory(int sceneID, FactoryCallBack factory) {
+void SceneManager::RegisterScene(int sceneID, FactoryCallBack factory) {
   if (_factories.find(sceneID) == _factories.end()) {
     _factories.insert({sceneID, std::move(factory)});
   }

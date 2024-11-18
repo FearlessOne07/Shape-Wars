@@ -24,7 +24,7 @@ private:
   void PopScene();
 
 public:
-  void RegisterSceneFactory(int sceneID, FactoryCallBack factory);
+  void RegisterScene(int sceneID, FactoryCallBack factory);
   void Update(float dt, const RenderContext &rendercontext);
   void Render();
 
