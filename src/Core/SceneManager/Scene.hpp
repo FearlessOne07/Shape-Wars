@@ -12,15 +12,11 @@ protected:
 public:
   virtual ~Scene() {}
   virtual void Update(float dt, const RenderContext &rendercontext) = 0;
+  virtual void Enter(SceneData sceneData = SceneData()) = 0;
   virtual void Render() = 0;
-  virtual void Enter() = 0;
   virtual void Exit() = 0;
 
-  virtual SceneTransition GetSceneTransition() {
-    return {SceneRequest::NONE, SceneID::NONE};
-  }
+  SceneTransition GetSceneTransition() { return _sceneTransition; }
 
-  void ResetSceneTransition() {
-    _sceneTransition = {SceneRequest::NONE, SceneID::NONE};
-  }
+  void ResetSceneTransition() { _sceneTransition = {SceneRequest::NONE, -1}; }
 };

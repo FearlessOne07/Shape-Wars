@@ -1,9 +1,9 @@
 #include "Game.hpp"
 #include "RenderContext.hpp"
 #include "Scenes/GameScene/GameScene.hpp"
+#include "Scenes/SceneID.hpp"
 #include "raylib.h"
 #include <algorithm>
-#include <memory>
 
 void Game::Init(int width, int height, const char *title, int fps) {
 
@@ -25,8 +25,10 @@ void Game::Init(int width, int height, const char *title, int fps) {
 
   // Init Systems
   _scenemanager = SceneManager();
-  _scenemanager.SetQuitCallBack([this]() { this->QuitCallBack(); });
-  _scenemanager.PushScene(std::make_unique<GameScene>());
+  _scenemanager.SetQuitCallBack([this]() { this->Quit(); });
+  _scenemanager.RegisterSceneFactory(
+      static_cast<int>(SceneID::GAME_SCENE),
+      []() { return std::make_unique<GameScene>(); });
 }
 
 void Game::Run() {
@@ -80,4 +82,4 @@ void Game::End() {
   CloseWindow();
 }
 
-void Game::QuitCallBack() { _running = false; }
+void Game::Quit() { _running = false; }

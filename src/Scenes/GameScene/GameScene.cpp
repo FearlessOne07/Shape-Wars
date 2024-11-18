@@ -7,10 +7,10 @@
 #include "raylib.h"
 #include <memory>
 
-void GameScene::Enter() {
+void GameScene::Enter(SceneData sceneData) {
 
   // Init game scene systems
-  _sceneTransition = {SceneRequest::NONE, SceneID::NONE};
+  _sceneTransition = {SceneRequest::NONE, -1};
   _bulletManager = BulletManager();
   _entityManager = EntityManager();
 
@@ -43,7 +43,8 @@ void GameScene::GetInput() {
 
   // Get input that affects this scene
   if (IsKeyPressed(KEY_ESCAPE)) {
-    _sceneTransition = {SceneRequest::QUIT, SceneID::NONE};
+    _sceneTransition.request = SceneRequest::QUIT;
+    _sceneTransition.sceneID = -1;
   }
 }
 
@@ -85,9 +86,6 @@ void GameScene::Update(float dt, const RenderContext &rendercontext) {
   _entityManager.Update(dt, rendercontext);
   _bulletManager.Update(dt, rendercontext);
 }
-
-// Scene transition request getter
-SceneTransition GameScene::GetSceneTransition() { return _sceneTransition; }
 
 void GameScene::UpdateCamera(float dt, const RenderContext &rendercontext) {
 

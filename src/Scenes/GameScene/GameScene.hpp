@@ -24,7 +24,6 @@ private:
 public:
   void Update(float dt, const RenderContext &rendercontext) override;
   void Render() override;
-  void Enter() override;
+  void Enter(SceneData sceneData = SceneData()) override;
   void Exit() override;
-  SceneTransition GetSceneTransition() override;
 };
