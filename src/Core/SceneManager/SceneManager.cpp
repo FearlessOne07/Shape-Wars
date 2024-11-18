@@ -3,13 +3,13 @@
 #include <iostream>
 #include <utility>
 
-void SceneManager::PushScene(std::unique_ptr<Scene> scene) {
+void SceneManager::PushScene(int scene, SceneData sceneData) {
   if (!_scenes.empty()) {
     // Exit the current scene
     _scenes.top()->Exit();
   }
   // Push new scen to the stack and enter it
-  _scenes.push(std::move(scene));
+  _scenes.push(std::move(_factories.at(scene)()));
   _scenes.top()->Enter();
 }
 
@@ -27,7 +27,7 @@ void SceneManager::PopScene() {
   }
 }
 
-void SceneManager::ReplaceScene(std::unique_ptr<Scene> scene) {
+void SceneManager::ReplaceScene(int scene, SceneData sceneData) {
   if (!_scenes.empty()) {
 
     // Exit the current scene and pop it
@@ -36,7 +36,7 @@ void SceneManager::ReplaceScene(std::unique_ptr<Scene> scene) {
   }
 
   // Push the new scene and enter it
-  _scenes.push(std::move(scene));
+  _scenes.push(std::move(_factories.at(scene)()));
   _scenes.top()->Enter();
 }
 
@@ -59,9 +59,14 @@ void SceneManager::Update(float dt, const RenderContext &rendercontext) {
     if (sceneTrans.request != SceneRequest::NONE) {
       if (sceneTrans.request == SceneRequest::QUIT) {
         std::cout << "Quiting!\n";
-
         // Quit if the scene requests to quite the game
         _quitCallBack();
+      } else if (sceneTrans.request == SceneRequest::PUSH_NEW_SCENE) {
+        PushScene(sceneTrans.sceneID, sceneTrans.data);
+      } else if (sceneTrans.request == SceneRequest::REPLACE_CURRENT_SCENE) {
+        ReplaceScene(sceneTrans.sceneID, sceneTrans.data);
+      } else if (sceneTrans.request == SceneRequest::POP_CURRENT_SCENE) {
+        PopScene();
       }
     }
   }
@@ -72,5 +77,15 @@ void SceneManager::Render() {
 
     // Render current scene
     _scenes.top()->Render();
+  }
+}
+
+void SceneManager::RegisterSceneFactory(int sceneID, FactoryCallBack factory) {
+  if (_factories.find(sceneID) == _factories.end()) {
+    _factories.insert({sceneID, std::move(factory)});
+  }
+
+  if (_scenes.empty()) {
+    PushScene(0);
   }
 }

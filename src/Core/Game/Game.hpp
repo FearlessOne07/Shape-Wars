@@ -14,12 +14,11 @@ private: // Systems
 
 private: // Methods
   void GetInput();
+  void Quit();
 
 public:
   Game() = default;
   void Init(int width, int height, const char *title, int fps = 0);
   void Run();
   void End();
-
-  void QuitCallBack();
 };
