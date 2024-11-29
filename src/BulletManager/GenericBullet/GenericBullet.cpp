@@ -1,10 +1,13 @@
 #include "GenericBullet.hpp"
 #include "EntityManager/Entity.hpp"
+#include "Utils/Damage.hpp"
 #include "raylib.h"
 #include "raymath.h"
 
-GenericBullet::GenericBullet(Vector2 position, float speed, float damage,
-                             Vector2 target, const Entity *source)
+GenericBullet::GenericBullet( //
+    Vector2 position, float speed, Damage damage, Vector2 target,
+    const Entity *source //
+    )
     : Bullet(position, speed, damage, source), _target(target) {
   _velocity = Vector2Subtract(_target, _position);
   _velocity = Vector2Normalize(_velocity);

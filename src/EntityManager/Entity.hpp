@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Game/RenderContext.hpp"
 #include "EntityManager/EntitySpec.hpp"
+#include "Utils/Damage.hpp"
 #include "raylib.h"
 #include "raymath.h"
 #include <functional>
@@ -17,7 +18,7 @@ protected:
   float _rotationSpeed = 0.f;
   int _healthPoints = 0;
   bool _canShoot = false;
-  float _damage = 0.f;
+  Damage _damage;
 
   float _fireRate = 0.f;
   Vector2 _velocity = {0.f};
@@ -66,6 +67,10 @@ protected: // Methods
     }
   }
 
+  void TakeKnockBack(Vector2 direction, float force) {
+    _position = Vector2Add(_position, Vector2Scale(direction, force));
+  }
+
 public:
   // Core
   Entity(EntitySpec entitySpec) {
@@ -107,14 +112,20 @@ public:
   bool IsAlive() const { return _isAlve; }
 
   int GetHp() const { return _healthPoints; }
-  void SetHp(int newHp) {
-
-    if (newHp <= 0) {
+  void TakeDamage(const Damage &damage) {
+    if (damage.hitPoints > _healthPoints) {
       _healthPoints = 0;
     } else {
-      _healthPoints = newHp;
+      _healthPoints -= damage.hitPoints;
+    }
+
+    if (Vector2Length(damage.direction) > 0 && damage.force > 0.f) {
+      TakeKnockBack(damage.direction, damage.force);
     }
   }
 
-  float GetDamage() const { return _damage; }
+  const Damage &GetDamage() {
+    _damage.direction = _velocity;
+    return _damage;
+  }
 };

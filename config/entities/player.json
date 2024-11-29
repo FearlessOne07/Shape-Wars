@@ -7,7 +7,10 @@
   "health-points": 10,
   "can-shoot": true,
   "fire-rate": 0.6,
-  "damage": 10,
+  "damage": {
+    "hitpoints": 10,
+    "force": 0
+  },
   "cost": null,
   "can-clump": false
 }

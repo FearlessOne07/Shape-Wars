@@ -6,7 +6,10 @@
 
 WaveSpawner::WaveSpawner() {
   _tierSpawnChances = {
-      {EnemyTier::EASY, 0.4}, {EnemyTier::MEDIUM, 0.4}, {EnemyTier::HARD, 0.2}};
+      {EnemyTier::EASY, 0.4},
+      {EnemyTier::MEDIUM, 0.4},
+      {EnemyTier::HARD, 0.2},
+  };
 }
 
 std::vector<int> &

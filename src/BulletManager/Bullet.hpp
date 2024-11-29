@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Game/RenderContext.hpp"
+#include "Utils/Damage.hpp"
 #include "raylib.h"
 
 class Entity;
@@ -10,14 +11,14 @@ protected:
   float _speed = 0.f;
   float _radius = 0.f;
 
-  float _damage = 0.f;
+  Damage _damage;
 
   bool _isAlive = true;
 
   const Entity *_source;
 
 public:
-  Bullet(Vector2 position, float speed, float damage, const Entity *source)
+  Bullet(Vector2 position, float speed, Damage damage, const Entity *source)
       : _position(position), _speed(speed), _velocity({0}), _radius(10),
         _damage(damage), _isAlive(true), _source(source) {}
 
@@ -56,5 +57,8 @@ public:
   // State
   bool IsAlive() const { return _isAlive; }
 
-  float GetDamage() const { return _damage; }
+  const Damage &GetDamage() {
+    _damage.direction = _velocity;
+    return _damage;
+  }
 };
