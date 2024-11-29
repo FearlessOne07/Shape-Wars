@@ -75,9 +75,10 @@ void Player::UpdateTimers(float dt) {
 void Player::Wrap(const RenderContext &rendercontext) {
 
   Vector2 minBounds = GetScreenToWorld2D({0, 0}, rendercontext.camera);
-  Vector2 maxBounds =
-      GetScreenToWorld2D({rendercontext.gameWidth, rendercontext.gameHeight},
-                         rendercontext.camera);
+  Vector2 maxBounds = GetScreenToWorld2D( //
+      {rendercontext.gameWidth, rendercontext.gameHeight},
+      rendercontext.camera //
+  );
 
   if (_position.x >= maxBounds.x + _radius) {
     _position.x = minBounds.x - _radius;

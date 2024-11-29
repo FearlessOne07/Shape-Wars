@@ -7,7 +7,10 @@
   "health-points": 5,
   "can-shoot": true,
   "fire-rate": 3,
-  "damage": 2,
+  "damage": {
+    "hitpoints": 2,
+    "force": 2
+  },
   "cost": 5,
   "can-clump": false,
   "unlock-wave": 3,

@@ -34,8 +34,9 @@ void Shooter::Attack(float dt) {
   _fireTimer += dt;
   _targetRotation = 1;
   if (_fireTimer >= _fireRate) {
-    std::unique_ptr<Bullet> bullet = std::make_unique<GenericBullet>(
-        _position, 500.f, _damage, _getPlayerCallBack()->GetPosition(), this);
+    std::unique_ptr<Bullet> bullet = std::make_unique<GenericBullet>(        //
+        _position, 500.f, _damage, _getPlayerCallBack()->GetPosition(), this //
+    );
     _bulletSpawnCallback(bullet);
     _fireTimer = 0.f;
   }
@@ -44,8 +45,10 @@ void Shooter::Attack(float dt) {
 void Shooter::ApproachPlayer(float dt) {
   Vector2 playerPosition = _getPlayerCallBack()->GetPosition();
   _targetVelocity = Vector2Subtract(playerPosition, _position);
-  float distanceFromPlayer =
-      Vector2Distance(_position, _getPlayerCallBack()->GetPosition());
+
+  float distanceFromPlayer = Vector2Distance(        //
+      _position, _getPlayerCallBack()->GetPosition() //
+  );
 
   if (distanceFromPlayer <= _plantDistance) {
     _targetVelocity = {0, 0};

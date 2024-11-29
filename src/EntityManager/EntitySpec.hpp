@@ -1,4 +1,5 @@
 #pragma once
+#include "Utils/Damage.hpp"
 #include "raylib.h"
 #include <string>
 struct EntitySpec {
@@ -10,7 +11,7 @@ struct EntitySpec {
   int healthPoints;
   bool canShoot;
   float fireRate;
-  float damage;
+  Damage damage;
   bool canClump;
   int tier;
   int unlockWave;

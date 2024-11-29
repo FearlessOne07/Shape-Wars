@@ -28,13 +28,16 @@ public:
 
     // Check type safety
     if (_data.type().hash_code() != typeid(T).hash_code()) {
-      throw std::runtime_error("SceneData type mismatch. Expected: " +
-                               std::string(typeid(T).name()) + ", but got: " +
-                               std::string(_data.type().name()));
+      throw std::runtime_error( //
+          "SceneData type mismatch. Expected: " +
+          std::string(typeid(T).name()) +
+          ", but got: " + std::string(_data.type().name()) //
+      );
     }
 
     return std::any_cast<T>(_data);
   }
+
   bool HasValue() const { return _data.has_value(); }
 };
 

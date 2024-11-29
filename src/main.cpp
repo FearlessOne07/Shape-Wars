@@ -6,8 +6,10 @@
 int main(void) {
   Game game;
   game.Init(1920, 1080, "Shape Wars");
-  game.RegisterScene(static_cast<int>(SceneID::GAME_SCENE),
-                     []() { return std::make_unique<GameScene>(); });
+  game.RegisterScene( //
+      static_cast<int>(SceneID::GAME_SCENE),
+      []() { return std::make_unique<GameScene>(); } //
+  );
   game.Run();
   return 0;
 }
