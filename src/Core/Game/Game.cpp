@@ -3,7 +3,6 @@
 #include "Scenes/GameScene/GameScene.hpp"
 #include "raylib.h"
 #include <algorithm>
-#include <date/date.h>
 
 void Game::Init(int width, int height, const char *title, int fps) {
 
