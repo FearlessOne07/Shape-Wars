@@ -12,10 +12,10 @@
 #include <memory>
 #include <vector>
 
-class EntityManager {
+class EntityManager
+{
 
-  using GetBulletsCallBack =
-      std::function<const std::vector<std::unique_ptr<Bullet>> &()>;
+  using GetBulletsCallBack = std::function<const std::vector<std::unique_ptr<Bullet>> &()>;
   using SpawnBulletCallBack = std::function<void(std::unique_ptr<Bullet> &)>;
 
 private:
@@ -56,8 +56,7 @@ private: // Methods
   void CheckBulletCollisions();
   void RemoveDeadEntities();
   void CheckPlayerCollisions();
-  void GenerateSpawnAnchors(int countPerSide,
-                            const RenderContext &rendercontext);
+  void GenerateSpawnAnchors(int countPerSide, const RenderContext &rendercontext);
 
   // Entities
   void SpawnWave(const RenderContext &rendercontext, float dt);

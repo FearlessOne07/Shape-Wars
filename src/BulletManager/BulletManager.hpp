@@ -2,7 +2,8 @@
 #include "Bullet.hpp"
 #include <memory>
 #include <vector>
-class BulletManager {
+class BulletManager
+{
 private:
   std::vector<std::unique_ptr<Bullet>> _bullets;
 

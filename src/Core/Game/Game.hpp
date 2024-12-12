@@ -2,7 +2,8 @@
 #include "Core/SceneManager/SceneManager.hpp"
 #include "raylib.h"
 
-class Game {
+class Game
+{
   // Type defs
   using FactoryCallBack = std::function<std::unique_ptr<Scene>()>;
 

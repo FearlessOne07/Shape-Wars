@@ -3,7 +3,8 @@
 #include "EntityManager/EntitySpec.hpp"
 
 class Player;
-class Chaser : public Entity {
+class Chaser : public Entity
+{
 private:
   void ChasePlayer();
 

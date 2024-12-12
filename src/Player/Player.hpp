@@ -3,7 +3,8 @@
 #include "EntityManager/Entity.hpp"
 #include "EntityManager/EntitySpec.hpp"
 
-class Player : public Entity {
+class Player : public Entity
+{
 private:
   void GetInput(const RenderContext &rendercontext);
   void Shoot(const RenderContext &rendercontext);

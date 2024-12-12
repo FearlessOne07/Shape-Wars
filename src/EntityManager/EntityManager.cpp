@@ -89,8 +89,7 @@ void EntityManager::AddEntity(std::unique_ptr<Entity> &entity)
   }
 
   // Set the get player call back
-  entity->SetGetPlayerCallBack([this]()
-                               { return this->GetPlayer(); });
+  entity->SetGetPlayerCallBack([this]() { return this->GetPlayer(); });
 
   // Add the entity
   _entities.emplace_back(std::move(entity));
@@ -126,8 +125,7 @@ void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt)
 
   // Check if there are no enemies and a certain time has passed then spawn
   // wave
-  if (_entitiesToSpawn.size() == 0 && _timeSinceLastWave > _waveInterval &&
-      _entities.size() == 0)
+  if (_entitiesToSpawn.size() == 0 && _timeSinceLastWave > _waveInterval && _entities.size() == 0)
   {
 
     // Get wave contenst from wave spawner
@@ -141,8 +139,7 @@ void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt)
 
   // Check if there are enemies to spawn and a certain time has passed after the
   // last enemy
-  if (_entitiesToSpawn.size() > 0 &&
-      _entitySpawnTimer >= _entitySpawnInterval)
+  if (_entitiesToSpawn.size() > 0 && _entitySpawnTimer >= _entitySpawnInterval)
   {
 
     // Initialize the random device
@@ -155,9 +152,7 @@ void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt)
 
     // Select a new anchor if the one chosen is the same as the last chiesen one
     // up to a maximum of five times
-    for (int i = 0; i < 5 && (anchor.x == _lastSpawnAnchor.x &&
-                              anchor.y == _lastSpawnAnchor.y);
-         i++)
+    for (int i = 0; i < 5 && (anchor.x == _lastSpawnAnchor.x && anchor.y == _lastSpawnAnchor.y); i++)
     {
       anchor = _spawnAnchors[anchorDist(gen)];
     }
@@ -203,32 +198,25 @@ void EntityManager::CheckBulletCollisions()
   for (auto &b : _getBulletsCallback())
   {
     GenericBullet *playerBullet = nullptr;
-    if ((playerBullet = dynamic_cast<GenericBullet *>(b.get())) &&
-        b->GetSource() == _player.get())
+    if ((playerBullet = dynamic_cast<GenericBullet *>(b.get())) && b->GetSource() == _player.get())
     {
       for (auto &e : _entities)
       {
         Vector2 playerBulletPos = playerBullet->GetPosition();
         float playerBulletRad = playerBullet->GetRadius();
-        if (CheckCollisionCircles(playerBulletPos, playerBulletRad,
-                                  e->GetPosition(), e->GetRadius()) &&
-            b->IsAlive())
+        if (CheckCollisionCircles(playerBulletPos, playerBulletRad, e->GetPosition(), e->GetRadius()) && b->IsAlive())
         {
           e->TakeDamage(playerBullet->GetDamage());
           playerBullet->SetIsAlive(false);
         }
       }
     }
-    else if ( //
-        (playerBullet = dynamic_cast<GenericBullet *>(b.get())) &&
-        b->GetSource() != _player.get() //
+    else if (                                                                                    //
+      (playerBullet = dynamic_cast<GenericBullet *>(b.get())) && b->GetSource() != _player.get() //
     )
     {
 
-      if (                       //
-          CheckCollisionCircles( //
-              _player->GetPosition(), _player->GetRadius(), b->GetPosition(),
-              b->GetRadius()) &&
+      if (CheckCollisionCircles(_player->GetPosition(), _player->GetRadius(), b->GetPosition(), b->GetRadius()) &&
           _player->IsAlive() //
       )
       {
@@ -241,10 +229,9 @@ void EntityManager::CheckBulletCollisions()
 
 void EntityManager::RemoveDeadEntities()
 {
-  auto it =
-      std::remove_if(_entities.begin(), _entities.end(),
-                     [](std::unique_ptr<Entity> &e)
-                     { return !e->IsAlive(); });
+  auto it = std::remove_if(                                                                      //
+    _entities.begin(), _entities.end(), [](std::unique_ptr<Entity> &e) { return !e->IsAlive(); } //
+  );
   _entities.erase(it, _entities.end());
 }
 
@@ -260,8 +247,7 @@ void EntityManager::CheckPlayerCollisions()
         Vector2 playerPos = _player->GetPosition();
         float playerRadius = _player->GetRadius();
 
-        if (CheckCollisionCircles(
-                playerPos, playerRadius, e->GetPosition(), e->GetRadius()))
+        if (CheckCollisionCircles(playerPos, playerRadius, e->GetPosition(), e->GetRadius()))
         {
           _player->TakeDamage(e->GetDamage());
         }
@@ -331,8 +317,7 @@ EntitySpec EntityManager::SpecFromJson(const Json::Value &json)
   return {};
 }
 
-void EntityManager::GenerateSpawnAnchors(int countPerSide,
-                                         const RenderContext &rendercontext)
+void EntityManager::GenerateSpawnAnchors(int countPerSide, const RenderContext &rendercontext)
 {
 
   float offset = 50.f;
@@ -384,14 +369,16 @@ void EntityManager::SetGetBulletsCallBack(GetBulletsCallBack callBack)
 {
   _getBulletsCallback = callBack;
 }
-void EntityManager::SetBulletSpawnCallBack(
-    SpawnBulletCallBack bulletSpawnCallback)
+void EntityManager::SetBulletSpawnCallBack(SpawnBulletCallBack bulletSpawnCallback)
 {
   _bulletSpawnCallback = bulletSpawnCallback;
 }
 
 // Access And Mutation
-int EntityManager::GetAliveCount() const { return _entities.size(); }
+int EntityManager::GetAliveCount() const
+{
+  return _entities.size();
+}
 
 const Player *EntityManager::GetPlayer() const
 {

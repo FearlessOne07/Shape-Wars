@@ -5,7 +5,8 @@
 #include "EntityManager/EntitySpec.hpp"
 #include "raylib.h"
 
-Player::Player(EntitySpec entitySpec) : Entity(entitySpec) {
+Player::Player(EntitySpec entitySpec) : Entity(entitySpec)
+{
 
   _isAlve = true;
 
@@ -18,7 +19,8 @@ Player::Player(EntitySpec entitySpec) : Entity(entitySpec) {
   _fireTimer = _fireRate;
 }
 
-void Player::Update(float dt, const RenderContext &rendercontext) {
+void Player::Update(float dt, const RenderContext &rendercontext)
+{
   Rotate(dt);
   UpdateTimers(dt);
   GetInput(rendercontext);
@@ -27,68 +29,90 @@ void Player::Update(float dt, const RenderContext &rendercontext) {
   CheckActivity();
 }
 
-void Player::Render() {
+void Player::Render()
+{
   DrawPolyLinesEx(_position, 6, _radius, _rotation, 3, _color);
 }
 
-void Player::GetInput(const RenderContext &rendercontext) {
-  if (IsKeyDown(KEY_A)) {
+void Player::GetInput(const RenderContext &rendercontext)
+{
+  if (IsKeyDown(KEY_A))
+  {
     _targetVelocity.x = -1;
-  } else if (IsKeyDown(KEY_D)) {
+  }
+  else if (IsKeyDown(KEY_D))
+  {
     _targetVelocity.x = 1;
-  } else {
+  }
+  else
+  {
     _targetVelocity.x = 0;
   }
 
-  if (IsKeyDown(KEY_W)) {
+  if (IsKeyDown(KEY_W))
+  {
     _targetVelocity.y = -1;
-  } else if (IsKeyDown(KEY_S)) {
+  }
+  else if (IsKeyDown(KEY_S))
+  {
     _targetVelocity.y = 1;
-  } else {
+  }
+  else
+  {
     _targetVelocity.y = 0;
   }
 
-  if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-    if (_fireTimer >= _fireRate) {
-
+  if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+  {
+    if (_fireTimer >= _fireRate)
+    {
       _fireTimer = 0.f;
       Shoot(rendercontext);
     }
   }
 }
 
-void Player::Shoot(const RenderContext &rendercontext) {
-
+void Player::Shoot(const RenderContext &rendercontext)
+{
   Vector2 mousePosition = GetMousePosition();
   mousePosition = rendercontext.GetScreenToGame(mousePosition);
   mousePosition = GetScreenToWorld2D(mousePosition, rendercontext.camera);
-  std::unique_ptr<Bullet> bullet = std::make_unique<GenericBullet>(
-      _position, 1000.f, _damage, mousePosition, this);
+  std::unique_ptr<Bullet> bullet = std::make_unique<GenericBullet>(_position, 1000.f, _damage, mousePosition, this);
   _bulletSpawnCallback(bullet);
 }
 
-void Player::UpdateTimers(float dt) {
+void Player::UpdateTimers(float dt)
+{
   if (_fireTimer < _fireRate)
+  {
     _fireTimer += dt;
+  }
 }
 
-void Player::Wrap(const RenderContext &rendercontext) {
+void Player::Wrap(const RenderContext &rendercontext)
+{
 
   Vector2 minBounds = GetScreenToWorld2D({0, 0}, rendercontext.camera);
   Vector2 maxBounds = GetScreenToWorld2D( //
-      {rendercontext.gameWidth, rendercontext.gameHeight},
-      rendercontext.camera //
+    {rendercontext.gameWidth, rendercontext.gameHeight},
+    rendercontext.camera //
   );
 
-  if (_position.x >= maxBounds.x + _radius) {
+  if (_position.x >= maxBounds.x + _radius)
+  {
     _position.x = minBounds.x - _radius;
-  } else if (_position.x <= minBounds.x - _radius) {
+  }
+  else if (_position.x <= minBounds.x - _radius)
+  {
     _position.x = maxBounds.x + _radius;
   }
 
-  if (_position.y >= maxBounds.y + _radius) {
+  if (_position.y >= maxBounds.y + _radius)
+  {
     _position.y = minBounds.y - _radius;
-  } else if (_position.y <= minBounds.y - _radius) {
+  }
+  else if (_position.y <= minBounds.y - _radius)
+  {
     _position.y = maxBounds.y + _radius;
   }
 }

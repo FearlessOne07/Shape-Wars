@@ -2,7 +2,8 @@
 #include "Utils/Damage.hpp"
 #include "raylib.h"
 #include <string>
-struct EntitySpec {
+struct EntitySpec
+{
   // Read-in
   float radius;
   float speed;

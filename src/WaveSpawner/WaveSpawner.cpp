@@ -4,16 +4,17 @@
 #include <iostream>
 #include <random>
 
-WaveSpawner::WaveSpawner() {
+WaveSpawner::WaveSpawner()
+{
   _tierSpawnChances = {
-      {EnemyTier::EASY, 0.4},
-      {EnemyTier::MEDIUM, 0.4},
-      {EnemyTier::HARD, 0.2},
+    {EnemyTier::EASY, 0.4},
+    {EnemyTier::MEDIUM, 0.4},
+    {EnemyTier::HARD, 0.2},
   };
 }
 
-std::vector<int> &
-WaveSpawner::SpawnWave(const std::unordered_map<int, EntitySpec> &specs) {
+std::vector<int> &WaveSpawner::SpawnWave(const std::unordered_map<int, EntitySpec> &specs)
+{
   _enemiesToSpawn.clear();
   _enemiesToSpawn.reserve(20);
   GenerateWave(specs);
@@ -22,8 +23,8 @@ WaveSpawner::SpawnWave(const std::unordered_map<int, EntitySpec> &specs) {
 
 // TODO: Refine spawing mechanic
 // TODO 2: REALLY FIX THIS SPAWING SYSTEM
-void WaveSpawner::GenerateWave(
-    const std::unordered_map<int, EntitySpec> &specs) {
+void WaveSpawner::GenerateWave(const std::unordered_map<int, EntitySpec> &specs)
+{
 
   assert(!specs.empty());
   _wavePoints = 5 * ++_waveCount;
@@ -34,12 +35,16 @@ void WaveSpawner::GenerateWave(
   std::mt19937_64 gen(rd());
 
   std::vector<int> pool = {};
-  for (auto &[enemy, spec] : specs) {
-    if (_waveCount >= spec.unlockWave) {
-      for (int i = 0; i < 3; ++i) { // Retry up to 3 times
+  for (auto &[enemy, spec] : specs)
+  {
+    if (_waveCount >= spec.unlockWave)
+    {
+      for (int i = 0; i < 3; ++i)
+      { // Retry up to 3 times
         std::uniform_real_distribution<float> probDist(0.f, 1.f);
         float tier = probDist(gen);
-        if (tier <= _tierSpawnChances[static_cast<EnemyTier>(spec.tier)]) {
+        if (tier <= _tierSpawnChances[static_cast<EnemyTier>(spec.tier)])
+        {
           pool.push_back(enemy);
           break;
         }
@@ -51,13 +56,18 @@ void WaveSpawner::GenerateWave(
 
   std::uniform_int_distribution<int> poolDist(0, pool.size() - 1);
   std::unordered_map<std::string, int> spawned = {};
-  while (_wavePoints > 0) {
+  while (_wavePoints > 0)
+  {
     int enemyType = pool[poolDist(gen)];
-    if (specs.at(enemyType).cost <= _wavePoints) {
+    if (specs.at(enemyType).cost <= _wavePoints)
+    {
       _wavePoints -= specs.at(enemyType).cost;
-      if (spawned.find(specs.at(enemyType).name) == spawned.end()) {
+      if (spawned.find(specs.at(enemyType).name) == spawned.end())
+      {
         spawned.insert({specs.at(enemyType).name, 1});
-      } else {
+      }
+      else
+      {
         ++spawned.at(specs.at(enemyType).name);
       }
       _enemiesToSpawn.push_back(enemyType);
@@ -65,12 +75,14 @@ void WaveSpawner::GenerateWave(
   }
 
   std::cout << "Upcoming Wave has " << _enemiesToSpawn.size() << " enemies\n";
-  for (auto &[name, count] : spawned) {
+  for (auto &[name, count] : spawned)
+  {
     std::cout << name << ": " << count << "\n";
   }
 }
 
-void WaveSpawner::Reset() {
+void WaveSpawner::Reset()
+{
   _waveCount = 0;
   _wavePoints = 0;
   _enemiesToSpawn.clear();

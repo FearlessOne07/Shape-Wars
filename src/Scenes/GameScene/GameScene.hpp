@@ -5,7 +5,8 @@
 #include "EntityManager/EntityManager.hpp"
 #include "raylib.h"
 
-class GameScene : public Scene {
+class GameScene : public Scene
+{
 private:
   EntityManager _entityManager;
   BulletManager _bulletManager;

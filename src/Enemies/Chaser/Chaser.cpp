@@ -4,26 +4,29 @@
 #include "raylib.h"
 #include "raymath.h"
 
-Chaser::Chaser(EntitySpec entitySpec) : Entity(entitySpec) {
+Chaser::Chaser(EntitySpec entitySpec) : Entity(entitySpec)
+{
   _color = RED;
   _targetRotation = 0.9;
   _rotationAccelertionFactor = 0.5;
 }
 
-void Chaser::ChasePlayer() {
-  Vector2 direction =
-      Vector2Subtract(_getPlayerCallBack()->GetPosition(), _position);
+void Chaser::ChasePlayer()
+{
+  Vector2 direction = Vector2Subtract(_getPlayerCallBack()->GetPosition(), _position);
 
   _targetVelocity = Vector2Normalize(direction);
 }
 
-void Chaser::Update(float dt, const RenderContext &rendercontext) {
+void Chaser::Update(float dt, const RenderContext &rendercontext)
+{
   Rotate(dt);
   ChasePlayer();
   UpdateMovement(dt);
   CheckActivity();
 }
 
-void Chaser::Render() {
+void Chaser::Render()
+{
   DrawPolyLinesEx(_position, 3, _radius, _rotation, 5, _color);
 }

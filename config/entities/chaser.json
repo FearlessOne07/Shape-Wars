@@ -9,7 +9,7 @@
   "fire-rate": 0,
   "damage": {
     "hitpoints": 1,
-    "force": 100
+    "force": 1
   },
   "cost": 1,
   "can-clump": true,

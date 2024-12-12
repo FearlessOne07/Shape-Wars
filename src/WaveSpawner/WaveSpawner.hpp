@@ -4,9 +4,15 @@
 #include <unordered_map>
 #include <vector>
 
-class WaveSpawner {
+class WaveSpawner
+{
   // Types
-  enum struct EnemyTier : int { EASY = 0, MEDIUM, HARD };
+  enum struct EnemyTier : int
+  {
+    EASY = 0,
+    MEDIUM,
+    HARD
+  };
 
 private:
   unsigned int _waveCount = 0;

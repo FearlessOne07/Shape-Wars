@@ -7,7 +7,8 @@
 #include "raylib.h"
 #include <memory>
 
-void GameScene::Enter(SceneData sceneData) {
+void GameScene::Enter(SceneData sceneData)
+{
 
   // Init game scene systems
   _sceneTransition = {SceneRequest::NONE, -1};
@@ -18,14 +19,10 @@ void GameScene::Enter(SceneData sceneData) {
   _bulletManager.Init();
 
   _entityManager.SetBulletSpawnCallBack(
-      [this](std::unique_ptr<Bullet> &bullet) {
-        this->_bulletManager.SpawnBullet(bullet);
-      });
+    [this](std::unique_ptr<Bullet> &bullet) { this->_bulletManager.SpawnBullet(bullet); });
 
   _entityManager.SetGetBulletsCallBack(
-      [this]() -> const std::vector<std::unique_ptr<Bullet>> & {
-        return this->_bulletManager.GetBullets();
-      });
+    [this]() -> const std::vector<std::unique_ptr<Bullet>> & { return this->_bulletManager.GetBullets(); });
 
   // Spawn the player
   _entityManager.SpawnPlayer();
@@ -39,38 +36,41 @@ void GameScene::Enter(SceneData sceneData) {
   _spawnTimer = 0.f;
 }
 
-void GameScene::GetInput() {
+void GameScene::GetInput()
+{
 
   // Get input that affects this scene
-  if (IsKeyPressed(KEY_ESCAPE)) {
+  if (IsKeyPressed(KEY_ESCAPE))
+  {
     _sceneTransition.request = SceneRequest::QUIT;
     _sceneTransition.sceneID = -1;
   }
 }
 
-void GameScene::Exit() {
+void GameScene::Exit()
+{
   // Reser entity and bullet manager classes on exit
   _entityManager.Reset();
   _bulletManager.Reset();
 }
 
-void GameScene::Render() {
+void GameScene::Render()
+{
 
   // Clear the screen
   ClearBackground(BLACK);
 
   // Debug
   DrawText(TextFormat("FPS: %i", GetFPS()), 10, 0, 40, WHITE);
-  DrawText(TextFormat("Camera target: %i, %i", (int)_camera.target.x,
-                      (int)_camera.offset.y),
-           10, 50, 40, WHITE);
-  DrawText(TextFormat("Player Position: %i, %i",
-                      (int)_entityManager.GetPlayer()->GetPosition().x,
-                      (int)_entityManager.GetPlayer()->GetPosition().y),
-           10, 100, 40, WHITE);
-  DrawText(
-      TextFormat("Player Health: %i", (int)_entityManager.GetPlayer()->GetHp()),
-      10, 150, 40, WHITE);
+  DrawText(TextFormat("Camera target: %i, %i", (int)_camera.target.x, (int)_camera.offset.y), 10, 50, 40, WHITE);
+  DrawText(     //
+    TextFormat( //
+      "Player Position: %i, %i", (int)_entityManager.GetPlayer()->GetPosition().x,
+      (int)_entityManager.GetPlayer()->GetPosition().y //
+      ),
+    10, 100, 40, WHITE //
+  );
+  DrawText(TextFormat("Player Health: %i", (int)_entityManager.GetPlayer()->GetHp()), 10, 150, 40, WHITE);
 
   // Being camera mode
   BeginMode2D(_camera);
@@ -79,7 +79,8 @@ void GameScene::Render() {
   EndMode2D();
 }
 
-void GameScene::Update(float dt, const RenderContext &rendercontext) {
+void GameScene::Update(float dt, const RenderContext &rendercontext)
+{
   // Update the game scene objects
   GetInput();
   UpdateCamera(dt, rendercontext);
@@ -87,7 +88,8 @@ void GameScene::Update(float dt, const RenderContext &rendercontext) {
   _bulletManager.Update(dt, rendercontext);
 }
 
-void GameScene::UpdateCamera(float dt, const RenderContext &rendercontext) {
+void GameScene::UpdateCamera(float dt, const RenderContext &rendercontext)
+{
 
   // Update camera
   _camera.offset.x = rendercontext.gameWidth / 2;

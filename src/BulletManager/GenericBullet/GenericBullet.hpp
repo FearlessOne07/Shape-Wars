@@ -5,7 +5,8 @@
 #include "Utils/Damage.hpp"
 #include "raylib.h"
 
-class GenericBullet : public Bullet {
+class GenericBullet : public Bullet
+{
 private:
   Vector2 _target = {0.f};
 
@@ -15,8 +16,7 @@ private: // Methods
 public:
   GenericBullet();
 
-  GenericBullet(Vector2 position, float speed, Damage damage, Vector2 target,
-                const Entity *source);
+  GenericBullet(Vector2 position, float speed, Damage damage, Vector2 target, const Entity *source);
   void Update(float dt, const RenderContext &renderContext) override;
   void Render() override;
 };

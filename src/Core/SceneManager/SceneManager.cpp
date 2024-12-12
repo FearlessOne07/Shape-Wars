@@ -4,8 +4,10 @@
 #include <stdexcept>
 #include <utility>
 
-void SceneManager::PushScene(int scene, SceneData sceneData) {
-  if (!_scenes.empty()) {
+void SceneManager::PushScene(int scene, SceneData sceneData)
+{
+  if (!_scenes.empty())
+  {
     // Exit the current scene
     _scenes.top()->Exit();
   }
@@ -14,23 +16,26 @@ void SceneManager::PushScene(int scene, SceneData sceneData) {
   _scenes.top()->Enter();
 }
 
-void SceneManager::PopScene() {
-  if (!_scenes.empty()) {
-
+void SceneManager::PopScene()
+{
+  if (!_scenes.empty())
+  {
     // Exit the current scene and pop it off the stack
     _scenes.top()->Exit();
     _scenes.pop();
   }
 
   // Enter the scene below it if there is one
-  if (!_scenes.empty()) {
+  if (!_scenes.empty())
+  {
     _scenes.top()->Enter();
   }
 }
 
-void SceneManager::ReplaceScene(int scene, SceneData sceneData) {
-  if (!_scenes.empty()) {
-
+void SceneManager::ReplaceScene(int scene, SceneData sceneData)
+{
+  if (!_scenes.empty())
+  {
     // Exit the current scene and pop it
     _scenes.top()->Exit();
     _scenes.pop();
@@ -41,12 +46,15 @@ void SceneManager::ReplaceScene(int scene, SceneData sceneData) {
   _scenes.top()->Enter();
 }
 
-void SceneManager::SetQuitCallBack(QuitCallBack quitCallBack) {
+void SceneManager::SetQuitCallBack(QuitCallBack quitCallBack)
+{
   _quitCallBack = quitCallBack;
 }
 
-void SceneManager::Update(float dt, const RenderContext &rendercontext) {
-  if (!_scenes.empty()) {
+void SceneManager::Update(float dt, const RenderContext &rendercontext)
+{
+  if (!_scenes.empty())
+  {
     // Update Current Scene
     _scenes.top()->Update(dt, rendercontext);
 
@@ -56,38 +64,53 @@ void SceneManager::Update(float dt, const RenderContext &rendercontext) {
     // Reset the scene's transisition request
     _scenes.top()->ResetSceneTransition();
 
-    if (sceneTrans.request != SceneRequest::NONE) {
-      if (sceneTrans.request == SceneRequest::QUIT) {
+    if (sceneTrans.request != SceneRequest::NONE)
+    {
+      if (sceneTrans.request == SceneRequest::QUIT)
+      {
         std::cout << "Quiting!\n";
         // Quit if the scene requests to quite the game
         _quitCallBack();
-      } else if (sceneTrans.request == SceneRequest::PUSH_NEW_SCENE) {
+      }
+      else if (sceneTrans.request == SceneRequest::PUSH_NEW_SCENE)
+      {
         PushScene(sceneTrans.sceneID, sceneTrans.data);
-      } else if (sceneTrans.request == SceneRequest::REPLACE_CURRENT_SCENE) {
+      }
+      else if (sceneTrans.request == SceneRequest::REPLACE_CURRENT_SCENE)
+      {
         ReplaceScene(sceneTrans.sceneID, sceneTrans.data);
-      } else if (sceneTrans.request == SceneRequest::POP_CURRENT_SCENE) {
+      }
+      else if (sceneTrans.request == SceneRequest::POP_CURRENT_SCENE)
+      {
         PopScene();
       }
     }
-  } else {
+  }
+  else
+  {
     throw std::runtime_error("No valid scene in scene stack");
   }
 }
 
-void SceneManager::Render() {
-  if (!_scenes.empty()) {
+void SceneManager::Render()
+{
+  if (!_scenes.empty())
+  {
 
     // Render current scene
     _scenes.top()->Render();
   }
 }
 
-void SceneManager::RegisterScene(int sceneID, FactoryCallBack factory) {
-  if (_factories.find(sceneID) == _factories.end()) {
+void SceneManager::RegisterScene(int sceneID, FactoryCallBack factory)
+{
+  if (_factories.find(sceneID) == _factories.end())
+  {
     _factories.insert({sceneID, std::move(factory)});
   }
 
-  if (_scenes.empty()) {
+  if (_scenes.empty())
+  {
     PushScene(0);
   }
 }
