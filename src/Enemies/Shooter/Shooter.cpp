@@ -5,6 +5,7 @@
 #include "Player/Player.hpp"
 #include "raylib.h"
 #include "raymath.h"
+#include <iostream>
 #include <memory>
 
 Shooter::Shooter(EntitySpec entitySpec) : Entity(entitySpec)

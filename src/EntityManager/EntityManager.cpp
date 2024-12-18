@@ -2,6 +2,7 @@
 #include "BulletManager/Bullet.hpp"
 #include "BulletManager/GenericBullet/GenericBullet.hpp"
 #include "Core/Game/RenderContext.hpp"
+#include "Enemies/Bouncer/Bouncer.hpp"
 #include "Enemies/Chaser/Chaser.hpp"
 #include "Enemies/Shooter/Shooter.hpp"
 #include "EntityManager/EntitySpec.hpp"
@@ -127,7 +128,6 @@ void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt)
   // wave
   if (_entitiesToSpawn.size() == 0 && _timeSinceLastWave > _waveInterval && _entities.size() == 0)
   {
-
     // Get wave contenst from wave spawner
     _entitiesToSpawn = _waveSpawner.SpawnWave(_entitySpecs);
     _timeSinceLastWave = 0;
@@ -141,7 +141,6 @@ void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt)
   // last enemy
   if (_entitiesToSpawn.size() > 0 && _entitySpawnTimer >= _entitySpawnInterval)
   {
-
     // Initialize the random device
     std::random_device rd;
     std::mt19937_64 gen(rd());
@@ -167,10 +166,10 @@ void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt)
     EntitySpec spec = _entitySpecs[enemy];
     std::unique_ptr<Entity> enemyToSpawn;
 
-    // set its start posiiton to the acnhor chisen
+    // set its start posiiton to the acnhor chosen
     spec.position = anchor;
 
-    // Push construct an eneity based on the chosen spec
+    // Push construct an entity based on the chosen spec
     if (spec.name == "chaser")
     {
       enemyToSpawn = std::make_unique<Chaser>(spec);
@@ -178,6 +177,10 @@ void EntityManager::SpawnWave(const RenderContext &rendercontext, float dt)
     else if (spec.name == "shooter")
     {
       enemyToSpawn = std::make_unique<Shooter>(spec);
+    }
+    else if (spec.name == "bouncer")
+    {
+      enemyToSpawn = std::make_unique<Bouncer>(spec);
     }
 
     std::cout << "Spawned " << spec.name << "\n";
@@ -292,7 +295,6 @@ EntitySpec EntityManager::SpecFromJson(const Json::Value &json)
   {
 
     EntitySpec spec;
-
     spec.radius = json["radius"].asFloat();
     spec.speed = json["speed"].asFloat();
     spec.acceleration = json["acceleration"].asFloat();
@@ -369,6 +371,7 @@ void EntityManager::SetGetBulletsCallBack(GetBulletsCallBack callBack)
 {
   _getBulletsCallback = callBack;
 }
+
 void EntityManager::SetBulletSpawnCallBack(SpawnBulletCallBack bulletSpawnCallback)
 {
   _bulletSpawnCallback = bulletSpawnCallback;

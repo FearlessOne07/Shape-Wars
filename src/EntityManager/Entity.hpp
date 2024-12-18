@@ -58,6 +58,11 @@ protected: // Methods
     _velocity = Vector2Add(_velocity, _knockbackVelocity);
     _knockbackVelocity = Vector2Lerp(_knockbackVelocity, {0.f, 0.f}, _knockbackDecay * dt);
 
+    if (Vector2Length(_knockbackVelocity) <= 0.01)
+    {
+      _knockbackVelocity = {0, 0};
+    }
+
     _position = Vector2Add(_position, Vector2Scale(_velocity, _speed * dt));
   }
 

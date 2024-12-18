@@ -14,7 +14,6 @@ Chaser::Chaser(EntitySpec entitySpec) : Entity(entitySpec)
 void Chaser::ChasePlayer()
 {
   Vector2 direction = Vector2Subtract(_getPlayerCallBack()->GetPosition(), _position);
-
   _targetVelocity = Vector2Normalize(direction);
 }
 

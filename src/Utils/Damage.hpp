@@ -3,6 +3,6 @@
 struct Damage
 {
   int hitPoints = 0;
-  float force = 0.f;
+  int force = 0;
   Vector2 direction = {0, 0};
 };

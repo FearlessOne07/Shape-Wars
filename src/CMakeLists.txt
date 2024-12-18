@@ -12,12 +12,13 @@ target_sources("${PROJECT_NAME}"    # No quotes around "main"
   "./WaveSpawner/WaveSpawner.cpp"
   "./Enemies/Chaser/Chaser.cpp"
   "./Enemies/Shooter/Shooter.cpp"
+  "./Enemies/Bouncer/Bouncer.cpp"
 )
 
 target_include_directories("${PROJECT_NAME}"
   PUBLIC
   "${CMAKE_SOURCE_DIR}/vendor/raylib/src/"
-  "${CMAKE_SOURCE_DIR}/vendor/jsoncpp/include/"
+  "${CMAKE_SOURCE_DIR}/vendor/json_cpp/include/"
   "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 

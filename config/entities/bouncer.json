@@ -1,0 +1,18 @@
+{
+  "name": "bouncer",
+  "radius": 30,
+  "speed": 110,
+  "acceleration": 3,
+  "rotation-speed": 100,
+  "health-points": 5,
+  "can-shoot": false,
+  "fire-rate": 0,
+  "damage": {
+    "hitpoints": 1,
+    "force": 1
+  },
+  "cost": 1,
+  "can-clump": true,
+  "unlock-wave": 1,
+  "tier": 0
+}

@@ -4,11 +4,11 @@
   "speed": 500,
   "acceleration": 3,
   "rotation-speed": 200,
-  "health-points": 10,
+  "health-points": 1000,
   "can-shoot": true,
   "fire-rate": 0.6,
   "damage": {
-    "hitpoints": 10,
+    "hitpoints": 1,
     "force": 0
   },
   "cost": null,
