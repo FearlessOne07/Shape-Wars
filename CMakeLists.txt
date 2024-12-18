@@ -9,7 +9,7 @@ set(CMAKE_BUILD_TYPE "Debug")
 
 add_subdirectory("${CMAKE_SOURCE_DIR}/vendor/raylib")
 set(JSONCPP_WITH_TESTS OFF CACHE BOOL "Disable jsoncpp tests")
-add_subdirectory("${CMAKE_SOURCE_DIR}/vendor/json_cpp")
+add_subdirectory("${CMAKE_SOURCE_DIR}/vendor/jsoncpp")
 include_directories(
   "${CMAKE_SOURCE_DIR}/src/"
 )

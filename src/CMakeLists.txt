@@ -18,7 +18,7 @@ target_sources("${PROJECT_NAME}"    # No quotes around "main"
 target_include_directories("${PROJECT_NAME}"
   PUBLIC
   "${CMAKE_SOURCE_DIR}/vendor/raylib/src/"
-  "${CMAKE_SOURCE_DIR}/vendor/json_cpp/include/"
+  "${CMAKE_SOURCE_DIR}/vendor/jsoncpp/include/"
   "${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
