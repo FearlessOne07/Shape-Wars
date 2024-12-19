@@ -6,12 +6,12 @@ class Bouncer : public Entity
 {
 private:
   Vector2 _bounceVelocity = {0.f, 0.f};
-  float _bounceForce = 0.f;
+  float _bounceForce = 1.f;
 
   bool _hasEntered = false;
 
 private:
-  void Bounce(const RenderContext &rd);
+  void Bounce(float dt, const RenderContext &rd);
   void ApproachPlayer(const RenderContext &rd);
 
 public:

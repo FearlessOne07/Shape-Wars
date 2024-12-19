@@ -10,35 +10,48 @@ Bouncer::Bouncer(EntitySpec spec) : Entity(spec)
 {
 }
 
-void Bouncer::Bounce(const RenderContext &rd)
+void Bouncer::Bounce(float dt, const RenderContext &rd)
 {
 
   Vector2 minBounds = GetScreenToWorld2D({0, 0}, rd.camera);
   Vector2 maxBounds = GetScreenToWorld2D({rd.gameWidth, rd.gameHeight}, rd.camera);
 
-  if (_position.x >= maxBounds.x - _radius)
+  if (_position.x > maxBounds.x - _radius)
   {
-    _bounceVelocity.x = -1;
-    _targetVelocity.x *= -1;
+    _velocity.x = 0;
+    _position.x = maxBounds.x - _radius;
+    _targetVelocity.x = -_targetVelocity.x;
+    _bounceVelocity.x = _targetVelocity.x;
   }
-  else if (_position.x <= minBounds.x + _radius)
+  else if (_position.x < minBounds.x + _radius)
   {
-    _bounceVelocity.x = 1;
-    _targetVelocity.x *= -1;
-  }
-
-  if (_position.y >= maxBounds.y - _radius)
-  {
-    _bounceVelocity.y = -1;
-    _targetVelocity.y *= -1;
-  }
-  else if (_position.y <= minBounds.y + _radius)
-  {
-    _bounceVelocity.y = 1;
-    _targetVelocity.y *= -1;
+    _velocity.x = 0;
+    _position.x = minBounds.x + _radius;
+    _targetVelocity.x = -_targetVelocity.x;
+    _bounceVelocity.x = _targetVelocity.x;
   }
 
-  _bounceVelocity = Vector2Scale(_bounceVelocity, _bounceForce);
+  if (_position.y > maxBounds.y - _radius)
+  {
+    _velocity.y = 0;
+    _position.y = maxBounds.y - _radius;
+    _targetVelocity.y = -_targetVelocity.y;
+    _bounceVelocity.y = _targetVelocity.y;
+  }
+  else if (_position.y < minBounds.y + _radius)
+  {
+    _velocity.y = 0;
+    _position.y = minBounds.y + _radius;
+    _targetVelocity.y = -_targetVelocity.y;
+    _bounceVelocity.y = _targetVelocity.y;
+  }
+  _bounceVelocity = Vector2Lerp(_bounceVelocity, {0, 0}, 500 * dt);
+
+  if (Vector2Length(_bounceVelocity) < 0.01)
+  {
+    _bounceVelocity = {0, 0};
+  }
+  _velocity = Vector2Add(_bounceVelocity, _velocity);
 }
 
 void Bouncer::Update(float dt, const RenderContext &rendercontext)
@@ -50,7 +63,7 @@ void Bouncer::Update(float dt, const RenderContext &rendercontext)
   }
   else
   {
-    Bounce(rendercontext);
+    Bounce(dt, rendercontext);
   }
   UpdateMovement(dt);
 }

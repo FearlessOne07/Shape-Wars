@@ -5,6 +5,7 @@
 #include "raylib.h"
 #include "raymath.h"
 #include <functional>
+#include <iostream>
 #include <memory>
 class Bullet;
 class Player;

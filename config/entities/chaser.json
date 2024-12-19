@@ -13,6 +13,6 @@
   },
   "cost": 1,
   "can-clump": true,
-  "unlock-wave": 1,
+  "unlock-wave": 5,
   "tier": 0
 }

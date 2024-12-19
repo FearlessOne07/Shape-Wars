@@ -1,7 +1,7 @@
 {
   "name": "bouncer",
   "radius": 30,
-  "speed": 110,
+  "speed": 190,
   "acceleration": 3,
   "rotation-speed": 100,
   "health-points": 5,
@@ -11,7 +11,7 @@
     "hitpoints": 1,
     "force": 1
   },
-  "cost": 1,
+  "cost": 5,
   "can-clump": true,
   "unlock-wave": 1,
   "tier": 0
