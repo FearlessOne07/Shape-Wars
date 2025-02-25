@@ -11,11 +11,13 @@
 #include "base/components/MoveComponent.hpp"
 #include "base/components/ShapeComponent.hpp"
 #include "base/components/TransformComponent.hpp"
+#include "base/systems/CameraSystem.hpp"
 #include "base/systems/InputSystem.hpp"
 #include "base/systems/MoveSystem.hpp"
 #include "base/systems/RenderSystem.hpp"
 #include "raylib.h"
 #include <cstdlib>
+#include <iostream>
 
 void GameScene::Enter( //
   Base::SystemManager *systemManager, Base::AssetManager *assetManager,
@@ -26,6 +28,7 @@ void GameScene::Enter( //
   systemManager->ActivatSystem<Base::InputSystem>();
   systemManager->ActivatSystem<Base::RenderSystem>();
   systemManager->ActivatSystem<RotationSystem>();
+  systemManager->ActivatSystem<Base::CameraSystem>();
 
   SpawnPlayer(assetManager);
 
@@ -49,6 +52,7 @@ void GameScene::Render(Base::SystemManager *systemManager)
   const Base::RenderContext *rd = Base::RenderContextSingleton::GetInstance();
 
   DrawText(TextFormat("FPS: %i", GetFPS()), 10, 10, 30, WHITE);
+  std::cout << rd->camera.target.x << "," << rd->camera.target.y << "\n";
   BeginMode2D(rd->camera);
   systemManager->Render();
   EndMode2D();
@@ -95,5 +99,5 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
   inpcmp->BindKeyReleased(KEY_S, [mvcmp]() { mvcmp->targetVelocity.y = 0; });
 
   Base::CameraComponent *camcmp = e->AddComponent<Base::CameraComponent>();
-  camcmp->cameraMode = Base::CameraMode::BASIC_FOLLOW;
+  camcmp->cameraMode = Base::CameraMode::SMOOTH_FOLLOW;
 }
