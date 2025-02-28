@@ -5,7 +5,7 @@
 #include "base/components/MoveComponent.hpp"
 #include "base/components/ShapeComponent.hpp"
 #include "base/components/TransformComponent.hpp"
-#include "raymath.h"
+#include "raylib/raymath.h"
 #include <memory>
 #include <vector>
 

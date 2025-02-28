@@ -2,7 +2,7 @@
 #include "Components/RotationComponent/RotationComponent.hpp"
 #include "base/EntityManager.hpp"
 #include "base/components/TransformComponent.hpp"
-#include "raymath.h"
+#include "raylib/raymath.h"
 #include <memory>
 #include <vector>
 

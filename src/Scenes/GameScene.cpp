@@ -15,9 +15,8 @@
 #include "base/systems/InputSystem.hpp"
 #include "base/systems/MoveSystem.hpp"
 #include "base/systems/RenderSystem.hpp"
-#include "raylib.h"
+#include "raylib/raylib.h"
 #include <cstdlib>
-#include <iostream>
 
 void GameScene::Enter( //
   Base::SystemManager *systemManager, Base::AssetManager *assetManager,
@@ -27,8 +26,8 @@ void GameScene::Enter( //
   systemManager->ActivatSystem<Base::MoveSystem>();
   systemManager->ActivatSystem<Base::InputSystem>();
   systemManager->ActivatSystem<Base::RenderSystem>();
-  systemManager->ActivatSystem<RotationSystem>();
   systemManager->ActivatSystem<Base::CameraSystem>();
+  systemManager->ActivatSystem<RotationSystem>();
 
   SpawnPlayer(assetManager);
 
@@ -52,7 +51,6 @@ void GameScene::Render(Base::SystemManager *systemManager)
   const Base::RenderContext *rd = Base::RenderContextSingleton::GetInstance();
 
   DrawText(TextFormat("FPS: %i", GetFPS()), 10, 10, 30, WHITE);
-  std::cout << rd->camera.target.x << "," << rd->camera.target.y << "\n";
   BeginMode2D(rd->camera);
   systemManager->Render();
   EndMode2D();

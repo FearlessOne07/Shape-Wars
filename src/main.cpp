@@ -11,8 +11,10 @@ int main(void)
   Base::Game game;
   game.Init(1920, 1080, "Ship Game");
 
-  // Register Systems
+  // Register Render  System
   game.RegisterSystem<Base::RenderSystem>(true);
+
+  // Register Rest of systems; Systems are updated in order of registration
   game.RegisterSystem<Base::InputSystem>();
   game.RegisterSystem<RotationSystem>();
   game.RegisterSystem<Base::MoveSystem>();
