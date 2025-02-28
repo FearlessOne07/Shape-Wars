@@ -2,6 +2,7 @@ set(SRC
   "./main.cpp"
   "./Scenes/GameScene.cpp"
   "./Systems/RotationSystem/RotationSystem.cpp"
+  "./Systems/BulletSystem/BulletSystem.cpp"
 )
 
 add_executable("${PROJECT_NAME}"

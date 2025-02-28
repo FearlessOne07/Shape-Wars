@@ -6,6 +6,7 @@
 #include "base/components/ShapeComponent.hpp"
 #include "base/components/TransformComponent.hpp"
 #include "raylib/raymath.h"
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -15,23 +16,28 @@ void BulletSystem::Update(float dt, Base::EntityManager *entityManager)
 
   for (auto &e : entities_bulcmp)
   {
-    Base::TransformComponent *transcmp = e->GetComponent<Base::TransformComponent>();
-    BulletComponent *bulcmp = e->GetComponent<BulletComponent>();
+    auto *transcmp = e->GetComponent<Base::TransformComponent>();
+    auto *bulcmp = e->GetComponent<BulletComponent>();
 
     if (bulcmp->bulletFireTimer >= bulcmp->bulletFireRate)
     {
       if (bulcmp->IsFiring)
       {
+        std::cout << "Firing\n";
         bulcmp->bulletFireTimer = 0.f;
         bulcmp->IsFiring = false;
-        Base::Entity *bullet = entityManager->AddEntity();
 
-        Base::MoveComponent *mvcmp = bullet->AddComponent<Base::MoveComponent>();
+        Base::Entity *bullet = entityManager->AddEntity();
+        auto *mvcmp = bullet->AddComponent<Base::MoveComponent>();
         mvcmp->targetVelocity = Vector2Subtract(bulcmp->target, transcmp->position);
         mvcmp->speed = bulcmp->bulletSpeed;
         mvcmp->acceleration = bulcmp->bulletSpeed;
 
-        Base::ShapeComponent *shpcmp = bullet->AddComponent<Base::ShapeComponent>();
+        auto *shpcmp = bullet->AddComponent<Base::ShapeComponent>();
+        shpcmp->points = 50;
+        shpcmp->color = WHITE;
+        shpcmp->radius = 20;
+        shpcmp->fill = true;
       }
     }
     else

@@ -1,0 +1,4 @@
+Checks: "-*,modernize-*,performance-*,bugprone-*"
+WarningsAsErrors: "bugprone-*"
+FormatStyle: file
+Checks: '-modernize-use-trailing-return-type'

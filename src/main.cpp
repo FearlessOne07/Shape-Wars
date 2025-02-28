@@ -1,4 +1,5 @@
 #include "Scenes/GameScene.hpp"
+#include "Systems/BulletSystem/BulletSystem.hpp"
 #include "Systems/RotationSystem/RotationSystem.hpp"
 #include "base/Game.hpp"
 #include "base/systems/CameraSystem.hpp"
@@ -17,6 +18,7 @@ int main(void)
   // Register Rest of systems; Systems are updated in order of registration
   game.RegisterSystem<Base::InputSystem>();
   game.RegisterSystem<RotationSystem>();
+  game.RegisterSystem<BulletSystem>();
   game.RegisterSystem<Base::MoveSystem>();
   game.RegisterSystem<Base::CameraSystem>();
 
