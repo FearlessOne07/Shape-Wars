@@ -19,7 +19,3 @@ target_link_libraries("${PROJECT_NAME}"
   PRIVATE
     base
 )
-
-target_compile_options(base PRIVATE
-  -Wall -Wextra -Wpedantic -Wshadow -Wconversion
-)

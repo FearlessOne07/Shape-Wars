@@ -1,6 +1,6 @@
 #include "GameScene.hpp"
-#include "Components/BulletComponent/BulletComponent.hpp"
 #include "Components/RotationComponent/RotationComponent.hpp"
+#include "Components/ShootComponent/ShootComponent.hpp"
 #include "Systems/BulletSystem/BulletSystem.hpp"
 #include "Systems/RotationSystem/RotationSystem.hpp"
 #include "base/Entity.hpp"
@@ -17,6 +17,7 @@
 #include "base/systems/InputSystem.hpp"
 #include "base/systems/MoveSystem.hpp"
 #include "base/systems/RenderSystem.hpp"
+#include "raylib.h"
 #include "raylib/raylib.h"
 #include <cstdlib>
 
@@ -85,9 +86,9 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
   rotcmp->targetRotationVelocity = 1;
   rotcmp->rotationSpeed = 250.f;
 
-  auto *bulcmp = e->AddComponent<BulletComponent>();
-  bulcmp->bulletSpeed = 900.f;
-  bulcmp->bulletFireRate = 0.5;
+  auto *shtcmp = e->AddComponent<ShootComponent>();
+  shtcmp->bulletSpeed = 900.f;
+  shtcmp->bulletFireRate = 0.5;
 
   auto *inpcmp = e->AddComponent<Base::InputComponent>();
   inpcmp->BindKeyPressed(KEY_A, [mvcmp]() { mvcmp->targetVelocity.x = -1; });
@@ -100,7 +101,11 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
   inpcmp->BindKeyReleased(KEY_W, [mvcmp]() { mvcmp->targetVelocity.y = 0; });
   inpcmp->BindKeyReleased(KEY_S, [mvcmp]() { mvcmp->targetVelocity.y = 0; });
 
-  inpcmp->BindMouseButtonPressed(MOUSE_BUTTON_LEFT, [bulcmp]() { bulcmp->IsFiring = true; });
+  inpcmp->BindMouseButtonPressed(MOUSE_BUTTON_LEFT, [shtcmp]() {
+    const Base::RenderContext *rd = Base::RenderContextSingleton::GetInstance();
+    shtcmp->IsFiring = true;
+    shtcmp->target = GetScreenToWorld2D(rd->GetScreenToGame(GetMousePosition()), rd->camera);
+  });
 
   auto *camcmp = e->AddComponent<Base::CameraComponent>();
   camcmp->cameraMode = Base::CameraMode::SMOOTH_FOLLOW;
