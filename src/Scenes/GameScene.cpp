@@ -12,7 +12,6 @@
 #include "base/components/InputComponent.hpp"
 #include "base/components/MoveComponent.hpp"
 #include "base/components/ShapeComponent.hpp"
-#include "base/components/TransformComponent.hpp"
 #include "base/systems/CameraSystem.hpp"
 #include "base/systems/InputSystem.hpp"
 #include "base/systems/MoveSystem.hpp"
@@ -68,7 +67,6 @@ void GameScene::Exit(Base::SystemManager *systemManager, Base::AssetManager *ass
 void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
 {
   Base::Entity *e = GetEntityManager()->AddEntity();
-  e->AddComponent<Base::TransformComponent>();
 
   auto *shpcmp = e->AddComponent<Base::ShapeComponent>();
   shpcmp->fill = true;
@@ -87,8 +85,9 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
   rotcmp->rotationSpeed = 250.f;
 
   auto *shtcmp = e->AddComponent<ShootComponent>();
-  shtcmp->bulletSpeed = 900.f;
   shtcmp->bulletFireRate = 0.5;
+  shtcmp->bulletLifetime = 3;
+  shtcmp->bulletSpeed = 900.f;
 
   auto *inpcmp = e->AddComponent<Base::InputComponent>();
   inpcmp->BindKeyPressed(KEY_A, [mvcmp]() { mvcmp->targetVelocity.x = -1; });

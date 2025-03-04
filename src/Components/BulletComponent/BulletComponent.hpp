@@ -3,7 +3,8 @@
 
 struct BulletComponent : public Base::Component
 {
-  float activeTimer = 0.f;
+  float lifeTimer = 0.f;
   float lifeTime = 0.f;
   Vector2 target = {.x = 0, .y = 0};
+  bool isActive = true;
 };
