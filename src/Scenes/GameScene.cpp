@@ -36,7 +36,7 @@ void GameScene::Enter( //
 
   const Base::RenderContext *rd = Base::RenderContextSingleton::GetInstance();
   rd->camera.target = {.x = 0, .y = 0};
-  rd->camera.zoom = 1;
+  rd->camera.zoom = 0.8;
   rd->camera.offset = {.x = rd->gameWidth / 2, .y = rd->gameHeight / 2};
 }
 
@@ -55,6 +55,7 @@ void GameScene::Render(Base::SystemManager *systemManager)
 
   DrawText(TextFormat("FPS: %i", GetFPS()), 10, 10, 30, WHITE);
   BeginMode2D(rd->camera);
+  DrawRectangleLinesEx({-1000, -1000, 2000, 2000}, 5, WHITE);
   systemManager->Render();
   EndMode2D();
 }
@@ -108,4 +109,6 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
 
   auto *camcmp = e->AddComponent<Base::CameraComponent>();
   camcmp->cameraMode = Base::CameraMode::SMOOTH_FOLLOW;
+  camcmp->maxFollowDistance = 100.f;
+  camcmp->cameraSpeed = 1000.f;
 }
