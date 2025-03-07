@@ -37,7 +37,7 @@ void BulletSystem::Update(float dt, Base::EntityManager *entityManager)
         mvcmp->acceleration = shtcmp->bulletSpeed;
 
         auto *shpcmp = bullet->AddComponent<Base::ShapeComponent>();
-        shpcmp->points = 50;
+        shpcmp->points = 3;
         shpcmp->color = WHITE;
         shpcmp->radius = 20;
         shpcmp->fill = true;

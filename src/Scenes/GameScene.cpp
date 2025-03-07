@@ -8,10 +8,11 @@
 #include "base/RenderContext.hpp"
 #include "base/RenderContextSingleton.hpp"
 #include "base/SystemManager.hpp"
+#include "base/components/BoundingBoxComponent.hpp"
 #include "base/components/CameraComponent.hpp"
 #include "base/components/InputComponent.hpp"
 #include "base/components/MoveComponent.hpp"
-#include "base/components/ShapeComponent.hpp"
+#include "base/components/TransformComponent.hpp"
 #include "base/systems/CameraSystem.hpp"
 #include "base/systems/InputSystem.hpp"
 #include "base/systems/MoveSystem.hpp"
@@ -55,7 +56,6 @@ void GameScene::Render(Base::SystemManager *systemManager)
 
   DrawText(TextFormat("FPS: %i", GetFPS()), 10, 10, 30, WHITE);
   BeginMode2D(rd->camera);
-  DrawRectangleLinesEx({-1000, -1000, 2000, 2000}, 5, WHITE);
   systemManager->Render();
   EndMode2D();
 }
@@ -69,11 +69,8 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
 {
   Base::Entity *e = GetEntityManager()->AddEntity();
 
-  auto *shpcmp = e->AddComponent<Base::ShapeComponent>();
-  shpcmp->fill = true;
-  shpcmp->color = WHITE;
-  shpcmp->points = 7;
-  shpcmp->radius = 40;
+  auto *transcmp = e->GetComponent<Base::TransformComponent>();
+  transcmp->position.y = -1000 - 40;
 
   // Input comp registeration
   auto *mvcmp = e->AddComponent<Base::MoveComponent>();
@@ -88,7 +85,14 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
   auto *shtcmp = e->AddComponent<ShootComponent>();
   shtcmp->bulletFireRate = 0.5;
   shtcmp->bulletLifetime = 3;
-  shtcmp->bulletSpeed = 900.f;
+  shtcmp->bulletSpeed = 2000.f;
+
+  auto *abbcmp = e->AddComponent<Base::BoundingBoxComponent>();
+  abbcmp->size = {.x = 40, .y = 80};
+  abbcmp->positionOffset = {.x = 0, .y = 0};
+  abbcmp->draw = true;
+  abbcmp->fill = false;
+  abbcmp->color = WHITE;
 
   auto *inpcmp = e->AddComponent<Base::InputComponent>();
   inpcmp->BindKeyPressed(KEY_A, [mvcmp]() { mvcmp->targetVelocity.x = -1; });
@@ -101,7 +105,7 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
   inpcmp->BindKeyReleased(KEY_W, [mvcmp]() { mvcmp->targetVelocity.y = 0; });
   inpcmp->BindKeyReleased(KEY_S, [mvcmp]() { mvcmp->targetVelocity.y = 0; });
 
-  inpcmp->BindMouseButtonPressed(MOUSE_BUTTON_LEFT, [shtcmp]() {
+  inpcmp->BindMouseButtonDown(MOUSE_BUTTON_LEFT, [shtcmp]() {
     const Base::RenderContext *rd = Base::RenderContextSingleton::GetInstance();
     shtcmp->IsFiring = true;
     shtcmp->target = GetScreenToWorld2D(rd->GetScreenToGame(GetMousePosition()), rd->camera);
@@ -111,4 +115,16 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
   camcmp->cameraMode = Base::CameraMode::SMOOTH_FOLLOW;
   camcmp->maxFollowDistance = 100.f;
   camcmp->cameraSpeed = 1000.f;
+
+  // Obstacle
+  Base::Entity *obs = GetEntityManager()->AddEntity();
+  auto *transcmpObs = obs->GetComponent<Base::TransformComponent>();
+  transcmpObs->position = {.x = -1000, .y = -1000};
+
+  auto *abbcmpObst = obs->AddComponent<Base::BoundingBoxComponent>();
+  abbcmpObst->size = {.x = 2000, .y = 2000};
+  abbcmpObst->draw = true;
+  abbcmpObst->fill = false;
+  abbcmpObst->nonFillThickness = 5;
+  abbcmpObst->color = WHITE;
 }
