@@ -1,8 +1,6 @@
 #include "GameScene.hpp"
-#include "Components/RotationComponent/RotationComponent.hpp"
 #include "Components/ShootComponent/ShootComponent.hpp"
 #include "Systems/BulletSystem/BulletSystem.hpp"
-#include "Systems/RotationSystem/RotationSystem.hpp"
 #include "base/Entity.hpp"
 #include "base/EntityManager.hpp"
 #include "base/RenderContext.hpp"
@@ -10,6 +8,7 @@
 #include "base/SystemManager.hpp"
 #include "base/components/BoundingBoxComponent.hpp"
 #include "base/components/CameraComponent.hpp"
+#include "base/components/GravityComponent.hpp"
 #include "base/components/InputComponent.hpp"
 #include "base/components/MoveComponent.hpp"
 #include "base/components/TransformComponent.hpp"
@@ -30,7 +29,6 @@ void GameScene::Enter( //
   systemManager->ActivatSystem<Base::InputSystem>();
   systemManager->ActivatSystem<Base::RenderSystem>();
   systemManager->ActivatSystem<Base::CameraSystem>();
-  systemManager->ActivatSystem<RotationSystem>();
   systemManager->ActivatSystem<BulletSystem>();
 
   SpawnPlayer(assetManager);
@@ -70,17 +68,12 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
   Base::Entity *e = GetEntityManager()->AddEntity();
 
   auto *transcmp = e->GetComponent<Base::TransformComponent>();
-  transcmp->position.y = -1000 - 40;
+  transcmp->position.y = -1000 - 80;
 
   // Input comp registeration
   auto *mvcmp = e->AddComponent<Base::MoveComponent>();
   mvcmp->speed = 1000.f;
   mvcmp->acceleration = 3;
-
-  auto *rotcmp = e->AddComponent<RotationComponent>();
-  rotcmp->rotationAcceleration = 2;
-  rotcmp->targetRotationVelocity = 1;
-  rotcmp->rotationSpeed = 250.f;
 
   auto *shtcmp = e->AddComponent<ShootComponent>();
   shtcmp->bulletFireRate = 0.5;
@@ -94,16 +87,23 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
   abbcmp->fill = false;
   abbcmp->color = WHITE;
 
+  auto gravcmp = e->AddComponent<Base::GravityComponent>();
+  gravcmp->gravityStrength = 4000.f;
+  gravcmp->jumpHeight = 1500.f;
+
   auto *inpcmp = e->AddComponent<Base::InputComponent>();
   inpcmp->BindKeyPressed(KEY_A, [mvcmp]() { mvcmp->targetVelocity.x = -1; });
   inpcmp->BindKeyPressed(KEY_D, [mvcmp]() { mvcmp->targetVelocity.x = 1; });
-  inpcmp->BindKeyPressed(KEY_W, [mvcmp]() { mvcmp->targetVelocity.y = -1; });
-  inpcmp->BindKeyPressed(KEY_S, [mvcmp]() { mvcmp->targetVelocity.y = 1; });
+  inpcmp->BindKeyDown(KEY_SPACE, [gravcmp, mvcmp]() {
+    if (!gravcmp->isJumping)
+    {
+      gravcmp->isJumping = true;
+      mvcmp->velocity.y = -gravcmp->jumpHeight;
+    }
+  });
 
   inpcmp->BindKeyReleased(KEY_A, [mvcmp]() { mvcmp->targetVelocity.x = 0; });
   inpcmp->BindKeyReleased(KEY_D, [mvcmp]() { mvcmp->targetVelocity.x = 0; });
-  inpcmp->BindKeyReleased(KEY_W, [mvcmp]() { mvcmp->targetVelocity.y = 0; });
-  inpcmp->BindKeyReleased(KEY_S, [mvcmp]() { mvcmp->targetVelocity.y = 0; });
 
   inpcmp->BindMouseButtonDown(MOUSE_BUTTON_LEFT, [shtcmp]() {
     const Base::RenderContext *rd = Base::RenderContextSingleton::GetInstance();
@@ -113,7 +113,7 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
 
   auto *camcmp = e->AddComponent<Base::CameraComponent>();
   camcmp->cameraMode = Base::CameraMode::SMOOTH_FOLLOW;
-  camcmp->maxFollowDistance = 100.f;
+  camcmp->maxFollowDistance = 200.f;
   camcmp->cameraSpeed = 1000.f;
 
   // Obstacle
