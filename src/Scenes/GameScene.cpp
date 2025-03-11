@@ -35,7 +35,7 @@ void GameScene::Enter( //
 
   const Base::RenderContext *rd = Base::RenderContextSingleton::GetInstance();
   rd->camera.target = {.x = 0, .y = 0};
-  rd->camera.zoom = 0.8;
+  rd->camera.zoom = 1.3;
   rd->camera.offset = {.x = rd->gameWidth / 2, .y = rd->gameHeight / 2};
 }
 
