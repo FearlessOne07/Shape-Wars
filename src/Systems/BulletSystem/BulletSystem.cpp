@@ -73,3 +73,11 @@ void BulletSystem::Update(float dt, Base::EntityManager *entityManager)
     }
   }
 }
+
+void BulletSystem::Stop()
+{
+}
+
+void BulletSystem::Start()
+{
+}

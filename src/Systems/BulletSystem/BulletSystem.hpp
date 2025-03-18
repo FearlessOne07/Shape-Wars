@@ -2,6 +2,9 @@
 
 class BulletSystem : public Base::System
 {
+  void Stop() override;
+  void Start() override;
+
 public:
-  virtual void Update(float dt, Base::EntityManager *entityManager) override;
+  void Update(float dt, Base::EntityManager *entityManager) override;
 };

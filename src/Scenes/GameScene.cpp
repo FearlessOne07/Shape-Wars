@@ -86,6 +86,7 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
   abbcmp->draw = true;
   abbcmp->fill = false;
   abbcmp->color = WHITE;
+  abbcmp->SetTypeFlag(Base::BoundingBoxComponent::Type::COLLIDER);
 
   auto gravcmp = e->AddComponent<Base::GravityComponent>();
   gravcmp->gravityStrength = 4000.f;
@@ -127,4 +128,5 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
   abbcmpObst->fill = false;
   abbcmpObst->nonFillThickness = 5;
   abbcmpObst->color = WHITE;
+  abbcmpObst->SetTypeFlag(Base::BoundingBoxComponent::Type::COLLIDER);
 }
