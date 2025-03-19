@@ -37,6 +37,7 @@ void GameScene::Enter( //
   rd->camera.target = {.x = 0, .y = 0};
   rd->camera.zoom = 1.3;
   rd->camera.offset = {.x = rd->gameWidth / 2, .y = rd->gameHeight / 2};
+  rd->camera.rotation = 0;
 }
 
 void GameScene::GetInput()
