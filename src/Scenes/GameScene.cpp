@@ -19,6 +19,7 @@
 #include "raylib.h"
 #include "raylib/raylib.h"
 #include <cstdlib>
+#include <iostream>
 
 void GameScene::Enter( //
   Base::SystemManager *systemManager, Base::AssetManager *assetManager,
@@ -82,7 +83,7 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
 
   auto *abbcmp = e->AddComponent<Base::BoundingBoxComponent>();
   abbcmp->size = {.x = 40, .y = 80};
-  abbcmp->positionOffset = {.x = 0, .y = 0};
+  abbcmp->positionOffset = {.x = 20, .y = 40};
   abbcmp->draw = true;
   abbcmp->fill = false;
   abbcmp->color = WHITE;
@@ -108,8 +109,12 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
 
   inpcmp->BindMouseButtonDown(MOUSE_BUTTON_LEFT, [shtcmp]() {
     const Base::RenderContext *rd = Base::RenderContextSingleton::GetInstance();
-    shtcmp->IsFiring = true;
-    shtcmp->target = GetScreenToWorld2D(rd->GetScreenToGame(GetMousePosition()), rd->camera);
+    if (!shtcmp->IsFiring)
+    {
+      std::cout << "Fire\n";
+      shtcmp->IsFiring = true;
+      shtcmp->target = GetScreenToWorld2D(rd->GetScreenToGame(GetMousePosition()), rd->camera);
+    }
   });
 
   auto *camcmp = e->AddComponent<Base::CameraComponent>();
