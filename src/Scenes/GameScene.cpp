@@ -110,13 +110,10 @@ void GameScene::SpawnPlayer(Base::AssetManager *assetManager)
 
   inpcmp->BindMouseButtonDown(MOUSE_BUTTON_LEFT, [shtcmp]() {
     const Base::RenderContext *rd = Base::RenderContextSingleton::GetInstance();
-    if (!shtcmp->IsFiring)
-    {
-      std::cout << "Fire\n";
-      shtcmp->IsFiring = true;
-      shtcmp->target = GetScreenToWorld2D(rd->GetScreenToGame(GetMousePosition()), rd->camera);
-    }
+    shtcmp->IsFiring = true;
+    shtcmp->target = GetScreenToWorld2D(rd->GetScreenToGame(GetMousePosition()), rd->camera);
   });
+  inpcmp->BindMouseButtonReleased(MOUSE_BUTTON_LEFT, [shtcmp]() { shtcmp->IsFiring = false; });
 
   auto *camcmp = e->AddComponent<Base::CameraComponent>();
   camcmp->cameraMode = Base::CameraMode::SMOOTH_FOLLOW;

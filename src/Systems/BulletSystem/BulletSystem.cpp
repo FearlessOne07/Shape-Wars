@@ -24,7 +24,6 @@ void BulletSystem::Update(float dt, Base::EntityManager *entityManager)
       if (shtcmp->IsFiring)
       {
         shtcmp->bulletFireTimer = 0.f;
-        shtcmp->IsFiring = false;
 
         Base::Entity *bullet = entityManager->AddEntity();
 
